@@ -5,7 +5,7 @@ export default function Profile() {
     const navigate = useNavigate();
   return (
     <div className="bg-background font-body text-on-background min-h-screen pb-32" data-mode="connect">
-      {/}
+     
       <header className="fixed top-0 w-full z-50 bg-[#fbffe2]/80 backdrop-blur-xl">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
