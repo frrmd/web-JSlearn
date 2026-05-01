@@ -76,7 +76,7 @@ export default function Leaderboard() {
         </div>
 
         <div className="space-y-4">
-    
+  
           <div className="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-2xl border-b-4 border-surface-container group hover:translate-y-[-2px] transition-transform">
             <span className="font-headline font-black text-on-surface-variant w-8">4</span>
             <img className="w-12 h-12 rounded-xl object-cover group-hover:scale-110 transition-transform" alt="User avatar male round" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDckAF-s07l2eAfvlTwOuxU6FvkyooSj254Oeu7pbRKL7AGuFSp4_63mQrs12gFpfGH9szFpo28mhGXzXBHbxPXditX1d_4q9iobv3VyHgH2f29tE3P_m1iDcNlAAghdd-_7DF03fGLmoH7QBva1BkQOe0fADmDiGNjPrNb58t5LrmGO69er2P3ijEdjiA43QvcVjf8wLc8tNtOH3i77vXQNhMlwfSwCzg_rkYyBAQbcr_JxDu07BWHA96gBG_WdiPYQJ1DAf3XAA" />

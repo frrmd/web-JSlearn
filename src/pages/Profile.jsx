@@ -40,10 +40,13 @@ export default function Profile() {
                 <button className="chunky-button-primary bg-primary text-white px-6 py-3 rounded-full font-headline font-bold transition-transform active:translate-y-1">
                   Follow Ninja
                 </button>
-                <button className="bg-surface-container-highest text-on-surface-variant px-6 py-3 rounded-full font-headline font-bold hover:bg-surface-variant transition-colors">
-                  <span className="material-symbols-outlined align-middle mr-1">settings</span>
-                  Settings
-                </button>
+                <button 
+  onClick={() => navigate('/settings')} 
+  className="bg-surface-container-highest text-on-surface-variant px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:brightness-95 transition-all"
+>
+  <span className="material-symbols-outlined align-middle mr-1">settings</span>
+  Settings
+</button>
               </div>
             </div>
           </div>

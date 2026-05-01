@@ -65,12 +65,13 @@ export default function Landing() {
                 <span className="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
               </button>
               
-              <button 
-                onClick={() => navigate('/home')}
-                className="bg-surface-container-lowest text-primary font-headline font-bold text-lg py-4 px-8 rounded-lg landing-chunky-shadow shadow-outline-variant/20 border-2 border-outline-variant/10 transition-all duration-100 active:translate-y-1 active:shadow-none"
-              >
-                I already have an account
-              </button>
+              {/* Secondary Button: Login */}
+            <button 
+  onClick={() => navigate('/login')} // <--- UBAH BAGIAN INI JADI /login
+  className="bg-surface-container-lowest text-primary font-headline font-bold text-lg py-4 px-8 rounded-lg landing-chunky-shadow shadow-outline-variant/20 border-2 border-outline-variant/10 transition-all duration-100 active:translate-y-1 active:shadow-none"
+>
+  I already have an account
+          </button>
             </div>
 
             {/* Social Login Separator */}

@@ -7,22 +7,27 @@ import Leaderboard from './pages/Leaderboard';
 import BottomNav from './components/BottomNav';
 import Quiz from './pages/Quiz';
 import AdminUsers from './pages/AdminUsers'; 
+import Settings from './pages/Settings';
+import Login from './pages/Login';
 
 
 function AppContent() {
   const location = useLocation();
   
 
-  const hideBottomNav = location.pathname === '/' || location.pathname === '/quiz';
+  // BottomNav tidak akan muncul di Landing Page ('/'), Quiz ('/quiz'), dan Login ('/login')
+     const hideBottomNav = location.pathname === '/' || location.pathname === '/quiz' || location.pathname === '/login' || location.pathname === '/settings';
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Landing />} />          {/* Default Route sekarang Landing */}
-        <Route path="/home" element={<Home />} />         {/* Home digeser ke /home */}
+        <Route path="/" element={<Landing />} />  
+        <Route path="/login" element={<Login />} />        
+        <Route path="/home" element={<Home />} />       
         <Route path="/path" element={<Path />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/quiz" element={<Quiz />} /> 
         <Route path="/admin/users" element={<AdminUsers />} /> 
       </Routes>
