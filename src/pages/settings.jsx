@@ -21,6 +21,7 @@ export default function Settings() {
       </header>
 
       <main className="pt-24 px-6 max-w-2xl mx-auto space-y-10">
+        
         {/* Account Section */}
         <section className="space-y-4">
           <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
@@ -28,16 +29,23 @@ export default function Settings() {
             Account
           </h2>
           <div className="bg-surface-container rounded-lg p-6 space-y-4 relative overflow-hidden">
-            <div className="bg-tertiary-container rounded-xl p-4 flex items-center justify-between border-b-4 border-tertiary-dim pressable group">
-              <div className="flex flex-col">
-                <span className="font-headline font-extrabold text-on-tertiary-container text-lg">Pro Plan</span>
-                <span className="text-on-tertiary-fixed-variant text-sm font-medium">Active until Dec 2024</span>
-              </div>
-              <div className="bg-on-tertiary-container text-white px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest">
-                Manage
-              </div>
-            </div>
-            <div className="space-y-1">
+            <div className="space-y-2">
+              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-secondary">badge</span>
+                  <span className="font-bold text-on-surface-variant">Change Username</span>
+                </div>
+                <span className="material-symbols-outlined text-outline">chevron_right</span>
+              </button>
+
+              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-secondary">description</span>
+                  <span className="font-bold text-on-surface-variant">Edit About</span>
+                </div>
+                <span className="material-symbols-outlined text-outline">chevron_right</span>
+              </button>
+
               <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-secondary">mail</span>
@@ -45,6 +53,7 @@ export default function Settings() {
                 </div>
                 <span className="material-symbols-outlined text-outline">chevron_right</span>
               </button>
+
               <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-secondary">lock</span>
@@ -88,41 +97,11 @@ export default function Settings() {
           </div>
         </section>
 
-        {/* Learning Section */}
-        <section className="space-y-4">
-          <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-            Learning
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-surface-container rounded-lg p-5 flex flex-col items-center text-center gap-3 border-b-4 border-outline-variant/30">
-              <span className="material-symbols-outlined text-primary text-3xl">track_changes</span>
-              <div className="space-y-1">
-                <span className="block font-bold text-on-surface">Daily Goal</span>
-                <span className="block text-sm font-medium text-on-surface-variant">15 mins / day</span>
-              </div>
-              <button className="w-full mt-2 py-2 bg-surface-container-lowest rounded-xl font-bold text-xs uppercase tracking-widest text-primary border-b-2 border-primary-dim pressable">
-                Change
-              </button>
-            </div>
-            <div className="bg-surface-container rounded-lg p-5 flex flex-col items-center text-center gap-3 border-b-4 border-outline-variant/30">
-              <span className="material-symbols-outlined text-primary text-3xl">language</span>
-              <div className="space-y-1">
-                <span className="block font-bold text-on-surface">Language</span>
-                <span className="block text-sm font-medium text-on-surface-variant">JavaScript</span>
-              </div>
-              <button className="w-full mt-2 py-2 bg-surface-container-lowest rounded-xl font-bold text-xs uppercase tracking-widest text-primary border-b-2 border-primary-dim pressable">
-                Update
-              </button>
-            </div>
-          </div>
-        </section>
-
         {/* About Section */}
         <section className="space-y-4">
           <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
-            About
+            App Info
           </h2>
           <div className="bg-surface-container rounded-lg p-2 space-y-1 overflow-hidden">
             <button className="w-full flex items-center justify-between p-4 hover:bg-surface-container-high rounded-xl transition-colors group">
@@ -136,17 +115,17 @@ export default function Settings() {
           </div>
         </section>
 
-       {/* Sign Out Button */}
-<div className="pt-6 pb-12">
-  <button 
-  onClick={() => navigate('/settings')} 
-  className="bg-surface-container-highest text-on-surface-variant px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:brightness-95 transition-all"
->
-  <span className="material-symbols-outlined align-middle mr-1">settings</span>
-  Settings
-</button>
-  <p className="text-center mt-6 text-on-surface-variant/60 font-bold text-sm">JS Mastery Version 4.2.0</p>
-</div>
+        {/* Sign Out Button */}
+        <div className="px-6 pt-6 pb-12">
+          <button 
+            onClick={() => navigate('/')} 
+            className="w-full py-5 bg-error rounded-2xl font-display font-black text-white text-lg uppercase tracking-wider border-b-8 border-on-error-container active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-3"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            Sign Out
+          </button>
+          <p className="text-center mt-6 text-on-surface-variant/60 font-bold text-sm">JS Mastery Version 4.2.0</p>
+        </div>
       </main>
       
       {/* Catatan: Bottom Nav tidak dimasukkan ke sini karena sudah ada secara global di App.tsx */}

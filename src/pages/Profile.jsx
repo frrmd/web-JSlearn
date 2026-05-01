@@ -12,9 +12,7 @@ export default function Profile() {
            
             <h1 className="font-headline font-black text-[#2e7300] text-2xl italic tracking-tight">JSlearn</h1>
           </div>
-          <div className="flex items-center gap-4 bg-surface-container rounded-full px-4 py-2">
-            <span className="font-headline font-bold text-lg tracking-tight text-[#2e7300]">5 🔥 120 XP 3 ❤️</span>
-          </div>
+          
         </div>
       </header>
 
@@ -89,7 +87,6 @@ export default function Profile() {
         <section className="space-y-6">
           <div className="flex justify-between items-end">
             <h3 className="font-headline font-black text-2xl text-on-background">Achievements</h3>
-            <a className="text-secondary font-bold hover:underline" href="#">View All</a>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             

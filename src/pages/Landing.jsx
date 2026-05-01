@@ -54,14 +54,15 @@ export default function Landing() {
                 Join over 2 million developers learning the language of the web.
               </p>
             </div>
+           
             
             {/* Action Buttons */}
             <div className="flex flex-col space-y-4 max-w-sm mx-auto lg:mx-0">
-              <button 
-                onClick={() => navigate('/home')} 
-                className="bg-primary text-on-primary font-headline font-extrabold text-xl py-4 px-8 rounded-lg landing-chunky-shadow shadow-primary-dim uppercase tracking-wider transition-all duration-100 flex items-center justify-center gap-3 active:translate-y-1 active:shadow-none"
+              <button onClick={() => navigate('/register')}
+              className="bg-primary text-on-primary font-headline font-extrabold text-xl py-4 px-8 rounded-lg landing-chunky-shadow shadow-primary-dim uppercase tracking-wider transition-all duration-100 flex items-center justify-center gap-3 active:translate-y-1 active:shadow-none"
               >
-                Get Started
+  GET STARTED
+
                 <span className="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
               </button>
               

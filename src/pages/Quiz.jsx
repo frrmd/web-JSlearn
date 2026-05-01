@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function Quiz() {
+  const { quizType } = useParams(); // Isinya akan jadi 'js-basics' atau 'loops-arrays'
+
+  // Gunakan quizType ini untuk memfilter pertanyaan kuis kamu
+  // Misal: if(quizType === 'js-basics') { setQuestions(dataBasics) }
+
+
   return (
     <div className="bg-background font-body text-on-surface">
       {/* SideNavBar Shell */}

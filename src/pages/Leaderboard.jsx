@@ -11,9 +11,7 @@ export default function Leaderboard() {
             
             <h1 className="text-2xl font-black text-[#2e7300] dark:text-[#58CC02] italic font-['Plus_Jakarta_Sans'] tracking-tight">JSlearn</h1>
           </div>
-          <div className="text-[#2e7300] dark:text-[#58CC02] font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight">
-            5 🔥 120 XP 3 ❤️
-          </div>
+
         </div>
         <div className="h-4 tonal-transition"></div>
       </header>
