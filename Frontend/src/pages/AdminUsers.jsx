@@ -1,72 +1,94 @@
 import React, { useState } from 'react';
+import { allUsers } from '../data/mockUser';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminUsers() {
-  // 1. STATE UNTUK DATA USERS (Dummy Data agar tabel tidak kosong)
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Farras', email: 'farras1@gmail.com', role: 'Student' },
-    { id: 2, name: 'harun', email: 'harun@gmail.com', role: 'Student' },
-  ]);
+  const navigate = useNavigate();
 
-  // 2. STATE UNTUK MODAL CREATE & UPDATE
+  // React state initialized from the single data source
+  const [users, setUsers] = useState(() => [...allUsers]);
+
+  // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ id: null, name: '', email: '', role: 'Student' });
+  const [formData, setFormData] = useState({ id: null, name: '', email: '', role: 'Student', xp: 0, status: 'active' });
   const [isEditing, setIsEditing] = useState(false);
 
-  // 3. STATE UNTUK MODAL DELETE CONFIRM
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  // --- FUNGSI-FUNGSI CRUD ---
+  // --- CRUD Functions ---
 
-  // Buka modal untuk Create
   const handleOpenCreate = () => {
-    setFormData({ id: null, name: '', email: '', role: 'Student' });
+    setFormData({ id: null, name: '', email: '', role: 'Student', xp: 0, status: 'active' });
     setIsEditing(false);
     setIsFormModalOpen(true);
   };
 
-  // Buka modal untuk Update
   const handleOpenEdit = (user) => {
-    setFormData(user);
+    setFormData({ ...user });
     setIsEditing(true);
     setIsFormModalOpen(true);
   };
 
-  // Simpan data (Create atau Update)
   const handleSave = (e) => {
     e.preventDefault();
     if (isEditing) {
-      // Update data
-      setUsers(users.map(u => (u.id === formData.id ? formData : u)));
+      // Update in state
+      const updated = users.map(u => (u.id === formData.id ? { ...formData } : u));
+      setUsers(updated);
+      // Sync back to allUsers source
+      const idx = allUsers.findIndex(u => u.id === formData.id);
+      if (idx !== -1) Object.assign(allUsers[idx], formData);
     } else {
-      // Create data baru
-      const newUser = { ...formData, id: Date.now() };
+      // Create new user
+      const newUser = { ...formData, id: Date.now(), username: formData.name.toLowerCase().replace(/\s+/g, '_'), avatarUrl: '' };
       setUsers([...users, newUser]);
+      allUsers.push(newUser);
     }
     setIsFormModalOpen(false);
   };
 
-  // Buka modal Delete
   const handleConfirmDelete = (user) => {
     setUserToDelete(user);
     setIsDeleteModalOpen(true);
   };
 
-  // Eksekusi Delete
   const handleDelete = () => {
     setUsers(users.filter(u => u.id !== userToDelete.id));
+    // Sync: remove from allUsers source
+    const idx = allUsers.findIndex(u => u.id === userToDelete.id);
+    if (idx !== -1) allUsers.splice(idx, 1);
     setIsDeleteModalOpen(false);
+  };
+
+  // Status badge styles
+  const statusBadge = (status) => {
+    if (status === 'active') return 'bg-[#84fb42]/20 text-[#1a4700]';
+    return 'bg-[#f95630]/10 text-[#be2d06]';
+  };
+
+  const roleBadge = (role) => {
+    if (role === 'Admin') return 'bg-[#a3d8ff]/30 text-[#006b99]';
+    return 'bg-[#e4f6a9] text-[#245c00]';
   };
 
   return (
     <div className="p-8 bg-[#fbffe2] min-h-screen text-[#313c0f]">
       <div className="max-w-6xl mx-auto">
         
-        {/* HEADER & TOMBOL CREATE */}
+        {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-black font-headline">Manajemen Users</h1>
-            <p className="text-[#5d6938]">Kelola data murid JS Learner di sini.</p>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-[#b2bf85]/30 text-[#2e7300] active:translate-y-[2px] transition-all"
+            >
+              <span className="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div>
+              <h1 className="text-3xl font-black font-headline">Manajemen Users</h1>
+              <p className="text-[#5d6938]">Kelola data murid JS Learner di sini.</p>
+            </div>
           </div>
           <button 
             onClick={handleOpenCreate}
@@ -77,7 +99,7 @@ export default function AdminUsers() {
           </button>
         </div>
 
-        {/* 1. TABLE LIST (READ) */}
+        {/* Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-[#b2bf85]/30 overflow-hidden">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -85,6 +107,8 @@ export default function AdminUsers() {
                 <th className="p-4 font-bold border-b border-[#b2bf85]/30">Nama</th>
                 <th className="p-4 font-bold border-b border-[#b2bf85]/30">Email</th>
                 <th className="p-4 font-bold border-b border-[#b2bf85]/30">Role</th>
+                <th className="p-4 font-bold border-b border-[#b2bf85]/30 text-center">XP</th>
+                <th className="p-4 font-bold border-b border-[#b2bf85]/30 text-center">Status</th>
                 <th className="p-4 font-bold border-b border-[#b2bf85]/30 text-center">Aksi</th>
               </tr>
             </thead>
@@ -94,40 +118,46 @@ export default function AdminUsers() {
                   <td className="p-4 border-b border-[#b2bf85]/10 font-medium">{user.name}</td>
                   <td className="p-4 border-b border-[#b2bf85]/10 text-gray-600">{user.email}</td>
                   <td className="p-4 border-b border-[#b2bf85]/10">
-                    <span className="bg-[#84fb42]/20 text-[#1a4700] px-3 py-1 rounded-full text-sm font-bold">
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${roleBadge(user.role)}`}>
                       {user.role}
                     </span>
                   </td>
-                  <td className="p-4 border-b border-[#b2bf85]/10 flex justify-center gap-2">
-                    {/* Tombol Update */}
-                    <button 
-                      onClick={() => handleOpenEdit(user)}
-                      className="p-2 text-[#006b99] bg-[#a3d8ff]/30 rounded-lg hover:bg-[#a3d8ff] transition-colors"
-                      title="Edit"
-                    >
-                      <span className="material-symbols-outlined text-sm">edit</span>
-                    </button>
-                    {/* Tombol Delete */}
-                    <button 
-                      onClick={() => handleConfirmDelete(user)}
-                      className="p-2 text-[#be2d06] bg-[#f95630]/10 rounded-lg hover:bg-[#f95630]/30 transition-colors"
-                      title="Hapus"
-                    >
-                      <span className="material-symbols-outlined text-sm">delete</span>
-                    </button>
+                  <td className="p-4 border-b border-[#b2bf85]/10 text-center font-bold font-headline">{(user.xp || 0).toLocaleString()}</td>
+                  <td className="p-4 border-b border-[#b2bf85]/10 text-center">
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusBadge(user.status)}`}>
+                      {user.status || 'active'}
+                    </span>
+                  </td>
+                  <td className="p-4 border-b border-[#b2bf85]/10">
+                    <div className="flex justify-center gap-2">
+                      <button 
+                        onClick={() => handleOpenEdit(user)}
+                        className="p-2 text-[#006b99] bg-[#a3d8ff]/30 rounded-lg hover:bg-[#a3d8ff] transition-colors"
+                        title="Edit"
+                      >
+                        <span className="material-symbols-outlined text-sm">edit</span>
+                      </button>
+                      <button 
+                        onClick={() => handleConfirmDelete(user)}
+                        className="p-2 text-[#be2d06] bg-[#f95630]/10 rounded-lg hover:bg-[#f95630]/30 transition-colors"
+                        title="Hapus"
+                      >
+                        <span className="material-symbols-outlined text-sm">delete</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="p-8 text-center text-gray-500">Belum ada data user.</td>
+                  <td colSpan="6" className="p-8 text-center text-gray-500">Belum ada data user.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {/* 2. MODAL POP-UP CREATE & UPDATE */}
+        {/* Create/Update Modal */}
         {isFormModalOpen && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl">
@@ -155,6 +185,40 @@ export default function AdminUsers() {
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Role</label>
+                    <select
+                      className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e7300] bg-white"
+                      value={formData.role}
+                      onChange={(e) => setFormData({...formData, role: e.target.value})}
+                    >
+                      <option value="Student">Student</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Status</label>
+                    <select
+                      className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e7300] bg-white"
+                      value={formData.status}
+                      onChange={(e) => setFormData({...formData, status: e.target.value})}
+                    >
+                      <option value="active">Active</option>
+                      <option value="suspended">Suspended</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">XP</label>
+                  <input 
+                    type="number"
+                    min="0"
+                    className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2e7300]"
+                    value={formData.xp}
+                    onChange={(e) => setFormData({...formData, xp: parseInt(e.target.value) || 0})}
+                  />
+                </div>
                 <div className="flex justify-end gap-3 mt-6">
                   <button 
                     type="button" 
@@ -175,7 +239,7 @@ export default function AdminUsers() {
           </div>
         )}
 
-        {/* 3. MODAL POP-UP DELETE CONFIRM */}
+        {/* Delete Confirm Modal */}
         {isDeleteModalOpen && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl text-center">

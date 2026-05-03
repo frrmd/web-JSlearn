@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { mockUser, allUsers } from '../data/mockUser';
 
 export default function Settings() {
   const navigate = useNavigate();
+
+  // Account form state — seeded from mock data
+  const [username, setUsername] = useState(mockUser.username);
+  const [about, setAbout] = useState(mockUser.bio);
+  const [email] = useState(mockUser.email);
+  const [password, setPassword] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  const handleSaveAccount = () => {
+    // Update the source of truth (allUsers) directly instead of the getter-only mockUser
+    const currentUser = allUsers.find(u => u.isCurrentUser);
+    if (currentUser) {
+      currentUser.username = username;
+    }
+    console.log('Account updated (mock):', { username, about, password: password ? '***' : '(unchanged)' });
+
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
   return (
     <div className="bg-background text-on-background font-body min-h-screen pb-32 selection:bg-primary-container">
@@ -10,7 +30,7 @@ export default function Settings() {
       <header className="fixed top-0 left-0 w-full z-50 flex items-center px-4 h-16 bg-[#fbffe2]/80 backdrop-blur-xl border-b-4 border-[#e1e5ca]">
         <div className="flex items-center gap-4 w-full">
           {/* Tombol Back untuk kembali ke Profile */}
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-highest text-[#2e7300] transition-all active:translate-y-[2px]"
           >
@@ -21,45 +41,93 @@ export default function Settings() {
       </header>
 
       <main className="pt-24 px-6 max-w-2xl mx-auto space-y-10">
-        
         {/* Account Section */}
         <section className="space-y-4">
           <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
             Account
           </h2>
-          <div className="bg-surface-container rounded-lg p-6 space-y-4 relative overflow-hidden">
+          <div className="bg-surface-container rounded-lg p-6 space-y-5 relative overflow-hidden">
+
+            {/* Username */}
             <div className="space-y-2">
-              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-secondary">badge</span>
-                  <span className="font-bold text-on-surface-variant">Change Username</span>
-                </div>
-                <span className="material-symbols-outlined text-outline">chevron_right</span>
-              </button>
+              <label className="block text-sm font-bold text-[#313c0f]">Username</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#b2bf85]">badge</span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-4 pl-12 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium"
+                  placeholder="Your username"
+                />
+              </div>
+            </div>
 
-              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-secondary">description</span>
-                  <span className="font-bold text-on-surface-variant">Edit About</span>
-                </div>
-                <span className="material-symbols-outlined text-outline">chevron_right</span>
-              </button>
+            {/* About */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-[#313c0f]">About</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-4 top-4 text-[#b2bf85]">description</span>
+                <textarea
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                  rows={3}
+                  className="w-full p-4 pl-12 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium resize-none"
+                  placeholder="Tell us about yourself"
+                />
+              </div>
+            </div>
 
-              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-secondary">mail</span>
-                  <span className="font-bold text-on-surface-variant">Change Email</span>
-                </div>
-                <span className="material-symbols-outlined text-outline">chevron_right</span>
-              </button>
+            {/* Email (readonly) */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-[#313c0f]">
+                Email
+                <span className="ml-2 text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container-highest px-2 py-0.5 rounded-full font-bold">Read Only</span>
+              </label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#b2bf85]">mail</span>
+                <input
+                  type="email"
+                  value={email}
+                  readOnly
+                  className="w-full p-4 pl-12 rounded-xl border-2 border-[#b2bf85]/20 bg-surface-container-highest/50 font-medium text-on-surface-variant cursor-not-allowed"
+                />
+              </div>
+            </div>
 
-              <button className="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl pressable border-b-4 border-outline-variant/20">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-secondary">lock</span>
-                  <span className="font-bold text-on-surface-variant">Password</span>
-                </div>
-                <span className="material-symbols-outlined text-outline">chevron_right</span>
+            {/* Password */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-[#313c0f]">New Password</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#b2bf85]">lock</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-4 pl-12 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium"
+                  placeholder="Leave blank to keep current"
+                />
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={handleSaveAccount}
+                className="bg-[#2e7300] text-white font-headline font-bold px-8 py-3 rounded-xl shadow-[0_4px_0_0_#1a4700] active:shadow-[0_0px_0_0_#1a4700] active:translate-y-1 transition-all flex items-center gap-2"
+              >
+                {saved ? (
+                  <>
+                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    Saved!
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-sm">save</span>
+                    Save Changes
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -97,11 +165,13 @@ export default function Settings() {
           </div>
         </section>
 
+
+
         {/* About Section */}
         <section className="space-y-4">
           <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
-            App Info
+            About
           </h2>
           <div className="bg-surface-container rounded-lg p-2 space-y-1 overflow-hidden">
             <button className="w-full flex items-center justify-between p-4 hover:bg-surface-container-high rounded-xl transition-colors group">
@@ -116,18 +186,18 @@ export default function Settings() {
         </section>
 
         {/* Sign Out Button */}
-        <div className="px-6 pt-6 pb-12">
-          <button 
-            onClick={() => navigate('/')} 
-            className="w-full py-5 bg-error rounded-2xl font-display font-black text-white text-lg uppercase tracking-wider border-b-8 border-on-error-container active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-3"
+        <div className="pt-6 pb-12">
+          <button
+            onClick={() => navigate('/')}
+            className="w-full bg-error text-on-error font-headline font-bold text-lg py-4 rounded-xl shadow-[0_4px_0_0_#8b0000] active:shadow-[0_0px_0_0_#8b0000] active:translate-y-1 transition-all flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined">logout</span>
-            Sign Out
+            SIGN OUT
           </button>
           <p className="text-center mt-6 text-on-surface-variant/60 font-bold text-sm">JS Mastery Version 4.2.0</p>
         </div>
       </main>
-      
+
       {/* Catatan: Bottom Nav tidak dimasukkan ke sini karena sudah ada secara global di App.tsx */}
     </div>
   );
