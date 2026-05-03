@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../data/mockUser';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,17 +14,15 @@ export default function Login() {
   const handleLogin = (e) => {
     e.preventDefault(); 
     
-    // Kita tentukan email dan password yang "Benar" (Dummy Data)
-    const validEmail = "admin@gmail.com";
-    const validPassword = "farrasganteng";
+    // Check credentials using the mock backend function
+    const result = loginUser(email, password);
 
-    // Cek apakah inputan user sama dengan data yang benar
-    if (email === validEmail && password === validPassword) {
+    if (result.success) {
       setErrorMessage(''); // Kosongkan pesan error
       navigate('/home');   // Pindah ke halaman home
     } else {
-      // Kalau salah, tampilkan pesan error ini
-      setErrorMessage('Oops! Email atau password kamu salah.');
+      // Kalau salah, tampilkan pesan error
+      setErrorMessage(result.message);
     }
   };
 
@@ -104,7 +103,7 @@ export default function Login() {
 
         <div className="mt-8 text-center border-t-2 border-[#b2bf85]/20 pt-6">
           <p className="text-sm text-[#5d6938] font-bold">
-            Don't have an account? <span onClick={() => navigate('/')} className="text-[#2e7300] cursor-pointer hover:underline">Get Started</span>
+            Don't have an account? <span onClick={() => navigate('/register')} className="text-[#2e7300] cursor-pointer hover:underline">Get Started</span>
           </p>
         </div>
       </div>
