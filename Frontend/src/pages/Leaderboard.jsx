@@ -3,19 +3,21 @@ import { mockUser, getLeaderboard } from '../data/mockUser';
 import TopAppBar from '../components/TopAppBar';
 
 export default function Leaderboard() {
+  // Tab state
   const [activeTab, setActiveTab] = useState('all');
 
-  // Single source of truth — same function used by Home and Profile
+  // Fetch leaderboard data
   const leaderboard = getLeaderboard();
 
-  // Weekly: show top 5 performers (mock — no timestamps yet)
-  // All Time: show full ranked list
+  // Display data based on active tab
   const displayLeaderboard = activeTab === 'weekly' ? leaderboard.slice(0, 5) : leaderboard;
 
+  // Top 3 users
   const topUsers = displayLeaderboard.slice(0, 3);
+  // Remaining users
   const remainingUsers = displayLeaderboard.slice(3);
 
-  // Find current user in the leaderboard
+  // Current user entry
   const currentUserEntry = leaderboard.find(u => u.isCurrentUser);
 
   return (

@@ -6,44 +6,43 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  // 1. Tambahkan state baru ini untuk menyimpan pesan error
+
+  // Local state
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 2. Ubah logika handleLogin di sini
+  // Handler logic
   const handleLogin = (e) => {
-    e.preventDefault(); 
-    
-    // Check credentials using the mock backend function
+    e.preventDefault();
+
+    // Mock API call
     const result = loginUser(email, password);
 
     if (result.success) {
-      setErrorMessage(''); // Kosongkan pesan error
-      navigate('/home');   // Pindah ke halaman home
+      setErrorMessage('');
+      navigate('/home');
     } else {
-      // Kalau salah, tampilkan pesan error
       setErrorMessage(result.message);
     }
   };
 
-  // ... lanjut ke return ( ...
+  // Render
 
-    return (
+  return (
     <div className="bg-[#fbffe2] min-h-screen flex flex-col justify-center items-center px-6 text-[#313c0f] font-body relative overflow-hidden">
-      
+
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-[#e4f6a9] rounded-full blur-3xl opacity-50 pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-80 h-80 bg-[#84fb42]/20 rounded-full blur-3xl pointer-events-none"></div>
 
-      {/* Tombol Back ke Landing Page */}
-      <button 
-        onClick={() => navigate('/')} 
+      {/* Back navigation button */}
+      <button
+        onClick={() => navigate('/')}
         className="absolute top-6 left-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white shadow-sm border border-[#b2bf85]/30 text-[#2e7300] active:translate-y-1 transition-all z-10"
       >
         <span className="material-symbols-outlined">arrow_back</span>
       </button>
 
-      {/* Card Form Login */}
+      {/* Login form card */}
       <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-[2rem] shadow-xl shadow-[#313c0f]/5 border-2 border-[#b2bf85]/20 z-10">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-[#2e7300] rounded-2xl flex items-center justify-center mx-auto mb-4 transform rotate-3">
@@ -53,7 +52,7 @@ export default function Login() {
           <p className="text-[#5d6938] mt-2 font-medium">Ready to continue your coding journey?</p>
         </div>
 
-        {/* NOTIFIKASI ERROR SEKARANG ADA DI SINI */}
+        {/* Error notification */}
         {errorMessage && (
           <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold rounded">
             {errorMessage}
@@ -63,25 +62,25 @@ export default function Login() {
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-bold mb-2 text-[#313c0f]">Email Address</label>
-            <input 
-              type="email" 
-              required 
+            <input
+              type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-4 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium" 
-              placeholder="ninja@jsmastery.com" 
+              className="w-full p-4 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium"
+              placeholder="ninja@jsmastery.com"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-bold mb-2 text-[#313c0f]">Password</label>
-            <input 
-              type="password" 
-              required 
+            <input
+              type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-4 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium" 
-              placeholder="••••••••" 
+              className="w-full p-4 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium"
+              placeholder="••••••••"
             />
           </div>
 
@@ -92,9 +91,9 @@ export default function Login() {
             </label>
             <a href="#" className="text-[#2e7300] hover:underline">Forgot Password?</a>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="w-full bg-[#2e7300] text-white font-headline font-bold text-lg py-4 rounded-xl shadow-[0_4px_0_0_#1a4700] active:shadow-[0_0px_0_0_#1a4700] active:translate-y-1 transition-all mt-4"
           >
             Sign In

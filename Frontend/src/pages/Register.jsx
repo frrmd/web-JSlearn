@@ -4,6 +4,7 @@ import { mockUser, registerUser } from '../data/mockUser';
 
 export default function Register() {
   const navigate = useNavigate();
+  // Form local state
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,11 +12,12 @@ export default function Register() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Form submission handler
   const handleRegister = (e) => {
     e.preventDefault();
     setErrorMessage('');
 
-    // Basic validation
+    // Input validation
     if (!name.trim()) {
       setErrorMessage('Nama tidak boleh kosong.');
       return;
@@ -38,7 +40,7 @@ export default function Register() {
 
     setIsLoading(true);
 
-    // Simulate API delay
+    // Mock API request
     setTimeout(() => {
       const result = registerUser({ name, email, password });
 

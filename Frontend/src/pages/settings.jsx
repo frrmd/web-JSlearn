@@ -5,7 +5,7 @@ import { mockUser, allUsers } from '../data/mockUser';
 export default function Settings() {
   const navigate = useNavigate();
 
-  // Account form state — seeded from mock data
+  // Account form local state
   const [username, setUsername] = useState(mockUser.username);
   const [about, setAbout] = useState(mockUser.bio);
   const [email] = useState(mockUser.email);
@@ -13,7 +13,7 @@ export default function Settings() {
   const [saved, setSaved] = useState(false);
 
   const handleSaveAccount = () => {
-    // Update the source of truth (allUsers) directly instead of the getter-only mockUser
+    // Update mock user data
     const currentUser = allUsers.find(u => u.isCurrentUser);
     if (currentUser) {
       currentUser.username = username;
@@ -29,7 +29,7 @@ export default function Settings() {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center px-4 h-16 bg-[#fbffe2]/80 backdrop-blur-xl border-b-4 border-[#e1e5ca]">
         <div className="flex items-center gap-4 w-full">
-          {/* Tombol Back untuk kembali ke Profile */}
+          {/* Back navigation button */}
           <button
             onClick={() => navigate(-1)}
             className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-highest text-[#2e7300] transition-all active:translate-y-[2px]"
@@ -198,7 +198,7 @@ export default function Settings() {
         </div>
       </main>
 
-      {/* Catatan: Bottom Nav tidak dimasukkan ke sini karena sudah ada secara global di App.tsx */}
+      {/* Bottom navigation is handled globally */}
     </div>
   );
 }
