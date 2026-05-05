@@ -88,7 +88,7 @@ export const allUsers = [
     name: 'Sarah Chen',
     username: 'sarah_c',
     email: 'sarah@example.com',
-    xp: 12150,
+    xp: 12495,
     role: 'Admin',
     status: 'active',
     avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1nonJmtHQsag1nrl5cM5PwE8nQ4pbQgTAou-Sdf13ePeKZsqxjwBpe_WJ4zI9OB7TTDAJ4g5gNtxfXfU31GQPmvZaANSp3EacQjuHTAsAuazTqLPVhn8rHR8FZ6qJfPoXhwXfKzQ9JOatJVjGgD-1FM5wtczjIUMkVG1InJ0eWJhwrx_2wIrtEfJ74hnkht9KZE78JfdGW1vACL3SvRkR3tE_X3HRFJyvg4XOAJhob_nXT8uDRgajJ4bSx57II99CrgoYgnEOcw'

@@ -2,31 +2,81 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'password',
+        'avatar_url',
+        'total_xp',
+        'role',
+        'last_login_at',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_login_at'     => 'datetime',
+            'password'          => 'hashed',
+            'total_xp'          => 'integer',
         ];
+    }
+
+    // =============================================
+    // RELATIONSHIPS
+    // =============================================
+
+    /**
+     * A user has completed many materials.
+     * Table: user_material_progress
+     */
+    public function materialProgress()
+    {
+        return $this->hasMany(UserMaterialProgress::class);
+    }
+
+    /**
+     * A user has attempted many quizzes.
+     * Table: user_quiz_progress
+     */
+    public function quizProgress()
+    {
+        return $this->hasMany(UserQuizProgress::class);
+    }
+
+    /**
+     * A user can unlock many achievements.
+     * Uses the user_achievements pivot table.
+     * withPivot('unlocked_at') gives access to when the badge was earned.
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class, 'user_achievements')
+                    ->withPivot('unlocked_at')
+                    ->orderByPivot('unlocked_at', 'desc');
     }
 }
