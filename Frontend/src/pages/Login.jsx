@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../data/mockUser';
+import { loginUser, mockUser } from '../data/mockUser';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,7 +19,11 @@ export default function Login() {
 
     if (result.success) {
       setErrorMessage('');
-      navigate('/home');
+      if (mockUser.role === 'Admin') {
+        navigate('/admin');
+      } else {
+        navigate('/home');
+      }
     } else {
       setErrorMessage(result.message);
     }

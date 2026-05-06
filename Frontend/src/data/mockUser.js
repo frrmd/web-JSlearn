@@ -80,7 +80,7 @@ export const allUsers = [
     xp: 12500,
     role: 'student',
     status: 'active',
-    avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaA9-ssuQo5Agw6kpzH1yk0APh4FyhOgP0SQ&s',
+    avatarUrl: 'blob:https://web.whatsapp.com/9f918dc0-9248-4917-9d08-2690932e20fb',
     isCurrentUser: true
   },
   {

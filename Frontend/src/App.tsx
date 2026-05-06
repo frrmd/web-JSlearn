@@ -12,14 +12,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import TopicDetail from './pages/TopicDetail';
 import MaterialContent from './pages/MaterialContent';
-
+import AdminDashboard from './pages/AdminDashboard';
 
 function AppContent() {
   const location = useLocation();
 
 
-  // BottomNav tidak akan muncul di Landing Page ('/'), Quiz ('/quiz'), Topic ('/topic'), dan Login ('/login')
-  const hideBottomNav = location.pathname === '/' || location.pathname.includes('/quiz') || location.pathname.includes('/topic') || location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/settings';
+  // BottomNav tidak akan muncul di Landing Page ('/'), Quiz ('/quiz'), Topic ('/topic'), Login ('/login'), dan rute admin
+  const hideBottomNav = location.pathname === '/' || location.pathname.includes('/quiz') || location.pathname.includes('/topic') || location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/settings' || location.pathname.startsWith('/admin');
 
   return (
     <>
@@ -36,6 +36,7 @@ function AppContent() {
         <Route path="/topic/:topicId/quiz/:quizId" element={<Quiz />} />
         <Route path="/topic/:topicId" element={<TopicDetail />} />
         <Route path="/topic/:topicId/material/:materialId" element={<MaterialContent />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AdminUsers />} />
       </Routes>
 
