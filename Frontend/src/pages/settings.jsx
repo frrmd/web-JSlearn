@@ -2,26 +2,65 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockUser, allUsers } from '../data/mockUser';
 
+const AVATAR_OPTIONS = [
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily'
+];
+
 export default function Settings() {
   const navigate = useNavigate();
 
-  // Account form state — seeded from mock data
+  // Account form local state
   const [username, setUsername] = useState(mockUser.username);
   const [about, setAbout] = useState(mockUser.bio);
   const [email] = useState(mockUser.email);
   const [password, setPassword] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState(mockUser.avatarUrl);
   const [saved, setSaved] = useState(false);
 
+  // Avatar Modal State
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(mockUser.avatarUrl);
+  const [uploadPreview, setUploadPreview] = useState(null);
+
   const handleSaveAccount = () => {
-    // Update the source of truth (allUsers) directly instead of the getter-only mockUser
+    // Update mock user data
     const currentUser = allUsers.find(u => u.isCurrentUser);
     if (currentUser) {
       currentUser.username = username;
+      currentUser.avatarUrl = avatarUrl;
     }
-    console.log('Account updated (mock):', { username, about, password: password ? '***' : '(unchanged)' });
+    console.log('Account updated (mock):', { username, about, avatarUrl, password: password ? '***' : '(unchanged)' });
 
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setUploadPreview(imageUrl);
+      setSelectedAvatarUrl(imageUrl);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsAvatarModalOpen(false);
+    // Reset selection to current avatar if cancelled
+    setSelectedAvatarUrl(avatarUrl);
+    setUploadPreview(null);
+  };
+
+  const handleSaveAvatar = () => {
+    setAvatarUrl(selectedAvatarUrl);
+    setIsAvatarModalOpen(false);
   };
 
   return (
@@ -29,7 +68,7 @@ export default function Settings() {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center px-4 h-16 bg-[#fbffe2]/80 backdrop-blur-xl border-b-4 border-[#e1e5ca]">
         <div className="flex items-center gap-4 w-full">
-          {/* Tombol Back untuk kembali ke Profile */}
+          {/* Back navigation button */}
           <button
             onClick={() => navigate(-1)}
             className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-highest text-[#2e7300] transition-all active:translate-y-[2px]"
@@ -41,6 +80,22 @@ export default function Settings() {
       </header>
 
       <main className="pt-24 px-6 max-w-2xl mx-auto space-y-10">
+        
+        {/* Avatar Section */}
+        <div className="flex flex-col items-center justify-center mb-2">
+          <div className="relative group cursor-pointer" onClick={() => setIsAvatarModalOpen(true)}>
+            <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-[#e1e5ca] bg-[#fbffe2] shadow-sm transition-transform group-hover:scale-105 group-active:scale-95">
+              <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
+            </div>
+            <button
+              className="absolute bottom-1 right-1 w-8 h-8 bg-[#2e7300] text-white rounded-full flex items-center justify-center shadow-md border-2 border-white transition-transform active:scale-95 group-hover:bg-[#1a4700]"
+              title="Change Avatar"
+            >
+              <span className="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+
         {/* Account Section */}
         <section className="space-y-4">
           <h2 className="font-headline font-bold text-xl text-primary flex items-center gap-2 px-2">
@@ -198,7 +253,74 @@ export default function Settings() {
         </div>
       </main>
 
-      {/* Catatan: Bottom Nav tidak dimasukkan ke sini karena sudah ada secara global di App.tsx */}
+      {/* Avatar Selection Modal */}
+      {isAvatarModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#1a1c18]/40 backdrop-blur-sm transition-opacity">
+          <div className="bg-surface-container rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-[#e1e5ca] flex items-center justify-between bg-[#fbffe2]">
+              <h3 className="font-headline font-bold text-xl text-primary">Change Avatar</h3>
+              <button onClick={handleCloseModal} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-highest text-on-surface-variant hover:text-error hover:bg-error-container transition-colors">
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                {/* Upload Slot */}
+                <label className={`aspect-square rounded-full border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
+                  uploadPreview || selectedAvatarUrl === uploadPreview
+                    ? 'border-primary bg-primary-container/20' 
+                    : 'border-[#b2bf85] hover:border-primary bg-surface-container-highest/50 hover:bg-surface-container-highest'
+                } ${selectedAvatarUrl === uploadPreview && uploadPreview ? 'border-[#2e7300] scale-110 shadow-lg border-solid' : ''}`}>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                  {uploadPreview ? (
+                    <img src={uploadPreview} alt="Upload Preview" className="w-full h-full object-cover rounded-full" onClick={(e) => { e.preventDefault(); setSelectedAvatarUrl(uploadPreview); }} />
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-[#b2bf85] text-2xl mb-1">add_photo_alternate</span>
+                      <span className="text-[10px] font-bold text-[#b2bf85] uppercase tracking-wider">Upload</span>
+                    </>
+                  )}
+                </label>
+
+                {/* Preset Avatars */}
+                {AVATAR_OPTIONS.map((url, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedAvatarUrl(url)}
+                    className={`aspect-square rounded-full overflow-hidden border-4 transition-all ${
+                      selectedAvatarUrl === url ? 'border-[#2e7300] scale-110 shadow-lg' : 'border-transparent hover:border-[#e1e5ca] hover:scale-105'
+                    }`}
+                  >
+                    <img src={url} alt={`Avatar option ${idx + 1}`} className="w-full h-full object-cover bg-[#fbffe2]" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-5 border-t border-[#e1e5ca] bg-surface-container-highest/30 flex gap-3 justify-end items-center">
+              <button
+                onClick={handleCloseModal}
+                className="px-6 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveAvatar}
+                className="bg-[#2e7300] text-white font-headline font-bold px-6 py-2.5 rounded-xl shadow-[0_3px_0_0_#1a4700] active:shadow-[0_0px_0_0_#1a4700] active:translate-y-1 transition-all flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-sm">check</span>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom navigation is handled globally */}
     </div>
   );
 }

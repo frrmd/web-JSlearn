@@ -7,7 +7,7 @@ import TopAppBar from '../components/TopAppBar';
 export default function Home() {
   const navigate = useNavigate();
 
-  // Rank — single source of truth from leaderboard
+  // Fetch rank and leaderboard data
   const leaderboard = getLeaderboard();
   const globalRank = getCurrentUserRank();
   const userAbove = globalRank > 1 ? leaderboard[globalRank - 2] : null;
@@ -16,11 +16,13 @@ export default function Home() {
     ? Math.min(100, Math.round((mockUser.totalXp / userAbove.xp) * 100))
     : 100;
 
+  // Map courses with current progress
   const coursesWithProgress = mockCourses.map(course => ({
     ...course,
     progress: calculateProgress(course.id)
   }));
 
+  // Determine the next topic to continue
   const continueTopic = coursesWithProgress
     .filter(t => t.progress < 100)
     .sort((a, b) => b.progress - a.progress)[0];

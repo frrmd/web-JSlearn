@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockUser } from '../data/mockUser';
+
 import { mockCourses } from '../data/mockCourses';
 import { calculateProgress } from '../data/userProgress';
 import TopAppBar from '../components/TopAppBar';

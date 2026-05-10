@@ -9,11 +9,15 @@ export default function MaterialContent() {
   const { topicId, materialId } = useParams();
   const navigate = useNavigate();
 
+  // Find course and material data
   const course = mockCourses.find(c => c.id === topicId) || mockCourses[0];
   const material = course.materials?.find(m => m.id === materialId) || course.materials?.[0] || { title: 'Material', description: '', readTime: '5 min' };
 
-  const isCompleted = userProgress[topicId]?.materials[materialId]?.completed;
+  // Check if material is completed
+  const isCompleted = userProgress[topicId]?.materials?.[materialId]?.completed;
 
+  // Automatically save this topic to the user's "Recent Topics" history
+  // whenever the page loads or the topic changes.
   useEffect(() => {
     addRecentTopic(course.id);
   }, [course.id]);

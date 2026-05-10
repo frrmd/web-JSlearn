@@ -70,7 +70,7 @@ export function checkAchievements(stats = {}) {
   });
 }
 
-// All users in the system (single source of truth)
+// All users in the system
 export const allUsers = [
   {
     id: 100,
@@ -80,7 +80,7 @@ export const allUsers = [
     xp: 12500,
     role: 'student',
     status: 'active',
-    avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaA9-ssuQo5Agw6kpzH1yk0APh4FyhOgP0SQ&s',
+    avatarUrl: 'blob:https://web.whatsapp.com/9f918dc0-9248-4917-9d08-2690932e20fb',
     isCurrentUser: true
   },
   {
@@ -88,7 +88,7 @@ export const allUsers = [
     name: 'Sarah Chen',
     username: 'sarah_c',
     email: 'sarah@example.com',
-    xp: 12150,
+    xp: 12495,
     role: 'Admin',
     status: 'active',
     avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1nonJmtHQsag1nrl5cM5PwE8nQ4pbQgTAou-Sdf13ePeKZsqxjwBpe_WJ4zI9OB7TTDAJ4g5gNtxfXfU31GQPmvZaANSp3EacQjuHTAsAuazTqLPVhn8rHR8FZ6qJfPoXhwXfKzQ9JOatJVjGgD-1FM5wtczjIUMkVG1InJ0eWJhwrx_2wIrtEfJ74hnkht9KZE78JfdGW1vACL3SvRkR3tE_X3HRFJyvg4XOAJhob_nXT8uDRgajJ4bSx57II99CrgoYgnEOcw'
@@ -173,22 +173,22 @@ export function updateUserXp(userId, xpToAdd) {
   }
 }
 
-// Add a topic to recent topics list (max 4, no duplicates, most recent first)
+// Add a topic to recent topics list 
 export function addRecentTopic(topicId) {
   if (!topicId) return;
 
   // Remove existing
   mockUser.recentTopics = mockUser.recentTopics.filter(id => id !== topicId);
-  // Add to start
+
   mockUser.recentTopics.unshift(topicId);
-  // Keep max 4
+  //  max 4
   if (mockUser.recentTopics.length > 4) {
     mockUser.recentTopics.pop();
   }
 }
 
-// Registered users store (mock auth database)
-// NOTE: IDs must match allUsers IDs — same user, same id across both arrays.
+// Registered users store 
+// NOTE: IDs must match allUsers IDs .
 export const registeredUsers = allUsers.map(u => ({
   id: u.id,
   name: u.name,
@@ -205,14 +205,14 @@ export function registerUser({ name, email, password }) {
     return { success: false, message: 'Email sudah terdaftar. Silakan login.' };
   }
 
-  // Generate a consistent unique ID across both arrays
+  // Generate a consistent unique ID 
   const newId = Math.max(...allUsers.map(u => u.id)) + 1;
 
   // Auth record
   const newUser = { id: newId, name, email, password };
   registeredUsers.push(newUser);
 
-  // Leaderboard / admin record — same ID, minimal public fields
+  // Leaderboard 
   allUsers.push({
     id: newId,
     name,
@@ -224,19 +224,19 @@ export function registerUser({ name, email, password }) {
     avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${newId}`
   });
 
-  // Unlock "New Account" achievement immediately at registration
-  const { getUserStats } = require('./userProgress'); // lazy to avoid circular dep
+  // Unlock New Account achievement
+  const { getUserStats } = require('./userProgress');
   checkAchievements({ ...getUserStats(), accountCreated: true });
 
   return { success: true, user: newUser };
 }
 
-// Login user (mock)
+// Login user 
 export function loginUser(email, password) {
   const validUser = registeredUsers.find(u => u.email === email && u.password === password);
 
   if (validUser) {
-    // Update current user flag
+    // Update current user 
     allUsers.forEach(u => u.isCurrentUser = false);
     const targetUser = allUsers.find(u => u.id === validUser.id);
     if (targetUser) targetUser.isCurrentUser = true;

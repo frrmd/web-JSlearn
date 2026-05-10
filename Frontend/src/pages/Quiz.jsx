@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { mockUser, addRecentTopic } from '../data/mockUser';
 import { mockQuizData } from '../data/mockQuiz';
 import { markQuizCompleted, userProgress } from '../data/userProgress';
@@ -9,34 +9,34 @@ export default function Quiz() {
   const navigate = useNavigate();
   const { topicId, quizId } = useParams();
 
-  // mengambil data soal berdasarkan topicId dan quizId
+  // Fetch quiz data
   const topicQuestions = mockQuizData[topicId]?.[quizId] || [];
 
-  // mengacak uruutan soal
+  // Shuffle questions
   const [questions] = useState(() => [...topicQuestions].sort(() => Math.random() - 0.5));
 
   useEffect(() => {
     addRecentTopic(topicId);
   }, [topicId]);
 
-  // state untuk menyimpan index soal yang sedang ditampilkan
+  // Current question index state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  // state untuk menyimpan id opsi yang dipilih user
+  // Selected option state
   const [selectedOptionId, setSelectedOptionId] = useState(null);
-  // state untuk mengetahui apakah jawaban sudah dicek atau belum
+  // Answer check state
   const [isAnswerChecked, setIsAnswerChecked] = useState(false);
-  // state untuk menampilkan atau menyembunyikan hint
+  // Hint visibility state
   const [showHint, setShowHint] = useState(false);
-  // state untuk mengetahui apakah quiz sudah selesai atau belum
+  // Quiz completion state
   const [isFinished, setIsFinished] = useState(false);
-  // state untuk menyimpan total XP yang didapat selama quiz berlangsung
+  // Earned XP state
   const [earnedXp, setEarnedXp] = useState(0);
-  // state untuk menyimpan jumlah jawaban benar
+  // Correct answers count state
   const [correctCount, setCorrectCount] = useState(0);
-  // state untuk menyimpan hasil quiz (XP baru dan apakah best score baru)
+  // Quiz result state
   const [quizResult, setQuizResult] = useState({ newXpEarned: 0, isNewBest: false });
 
-  // reset semua state ke nilai awal agar user bisa mengulang quiz dari awal
+  // Reset quiz state
   const handleRetake = () => {
     setCurrentQuestionIndex(0);
     setSelectedOptionId(null);

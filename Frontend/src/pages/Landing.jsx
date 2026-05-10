@@ -6,8 +6,8 @@ export default function Landing() {
 
   return (
     <div style={{ minHeight: 'max(884px, 100dvh)' }} className="bg-background font-body text-on-background selection:bg-primary-container selection:text-on-primary-container flex flex-col relative overflow-hidden">
-      
-      
+
+
       <div className="fixed top-0 left-0 -z-10 w-full h-full pointer-events-none opacity-40">
         <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-surface-container-highest rounded-full blur-3xl"></div>
         <div className="absolute bottom-[5%] right-[2%] w-96 h-96 bg-primary-container rounded-full blur-3xl opacity-20"></div>
@@ -16,12 +16,12 @@ export default function Landing() {
         <span className="material-symbols-outlined absolute top-1/2 left-[45%] text-secondary/5 text-[15rem]" data-icon="javascript">javascript</span>
       </div>
 
-      
+
       <main className="flex-grow flex flex-col items-center justify-center px-6 py-12 lg:py-24 z-10">
-       
+
         <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-     
+
+
           <div className="flex flex-col items-center lg:items-end space-y-8 order-2 lg:order-1">
             <div className="relative group">
               <div className="absolute -top-6 -left-6 w-32 h-32 bg-secondary-container rounded-full blur-3xl opacity-40"></div>
@@ -54,24 +54,24 @@ export default function Landing() {
                 Join over 2 million developers learning the language of the web.
               </p>
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex flex-col space-y-4 max-w-sm mx-auto lg:mx-0">
-              <button 
-                onClick={() => navigate('/register')} 
+              <button
+                onClick={() => navigate('/register')}
                 className="bg-primary text-on-primary font-headline font-extrabold text-xl py-4 px-8 rounded-lg landing-chunky-shadow shadow-primary-dim uppercase tracking-wider transition-all duration-100 flex items-center justify-center gap-3 active:translate-y-1 active:shadow-none"
               >
                 Get Started
                 <span className="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
               </button>
-              
+
               {/* Secondary Button: Login */}
-            <button 
-  onClick={() => navigate('/login')} // <--- UBAH BAGIAN INI JADI /login
-  className="bg-surface-container-lowest text-primary font-headline font-bold text-lg py-4 px-8 rounded-lg landing-chunky-shadow shadow-outline-variant/20 border-2 border-outline-variant/10 transition-all duration-100 active:translate-y-1 active:shadow-none"
->
-  I already have an account
-          </button>
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-surface-container-lowest text-primary font-headline font-bold text-lg py-4 px-8 rounded-lg landing-chunky-shadow shadow-outline-variant/20 border-2 border-outline-variant/10 transition-all duration-100 active:translate-y-1 active:shadow-none"
+              >
+                I already have an account
+              </button>
             </div>
 
             {/* Social Login Separator */}

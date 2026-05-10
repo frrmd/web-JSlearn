@@ -8,20 +8,21 @@ import TopAppBar from '../components/TopAppBar';
 export default function Profile() {
   const navigate = useNavigate();
 
-  // Check achievements once on mount — not on every render
+  // Run this exactly once when the Profile page first loads.
+  // It checks the user's current stats to see if they unlocked any new achievements.
   useEffect(() => {
     checkAchievements(getUserStats());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Rank — single source of truth from leaderboard
+  // Global rank data source
   const globalRank = getCurrentUserRank();
 
   const coursesProgress = mockCourses.map(course => ({
     ...course,
     progressPct: calculateProgress(course.id)
   }));
-
-  coursesProgress.sort((a, b) => {
+  // define courseprogress become 3 group and sorting desc
+  const sortedCourses = [...coursesProgress].sort((a, b) => {
     const getGroup = (p) => {
       if (p > 0 && p < 100) return 1;
       if (p === 0) return 2;
@@ -42,7 +43,7 @@ export default function Profile() {
     return 0;
   });
 
-  const topProgress = coursesProgress.slice(0, 3);
+  const topProgress = sortedCourses.slice(0, 3);
 
   return (
     <div className="bg-background font-body text-on-background min-h-screen pb-32" data-mode="connect">
@@ -170,7 +171,7 @@ export default function Profile() {
           </div>
         </section>
 
-        {/* TOMBOL KHUSUS ADMIN */}
+        {/* Admin specific actions */}
         {mockUser.role === 'Admin' && (
           <div className="mt-8 max-w-4xl mx-auto">
             <button
@@ -182,8 +183,8 @@ export default function Profile() {
                   <span className="material-symbols-outlined">admin_panel_settings</span>
                 </div>
                 <div className="text-left text-[#313c0f]">
-                  <p className="font-bold">Manajemen Users (CRUD)</p>
-                  <p className="text-xs text-gray-500">Akses khusus Admin untuk mengelola murid</p>
+                  <p className="font-bold">User Management</p>
+                  <p className="text-xs text-gray-500">Admin access to manage users</p>
                 </div>
               </div>
               <span className="material-symbols-outlined text-[#2e7300]">chevron_right</span>

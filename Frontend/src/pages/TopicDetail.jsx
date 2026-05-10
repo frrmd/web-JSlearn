@@ -9,8 +9,10 @@ export default function TopicDetail() {
   const { topicId } = useParams();
   const navigate = useNavigate();
   
+  // Find selected course data
   const course = mockCourses.find(c => c.id === topicId) || mockCourses[0];
 
+  // Effect to record recent topic
   useEffect(() => {
     addRecentTopic(course.id);
   }, [course.id]);
@@ -52,7 +54,7 @@ export default function TopicDetail() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h3 className="font-headline font-bold text-lg group-hover:text-primary transition-colors pr-2">{material.title}</h3>
-                      {userProgress[topicId]?.materials[material.id]?.completed ? (
+                      {userProgress[topicId]?.materials?.[material.id]?.completed ? (
                         <span className="bg-[#e8f5e9] text-[#1b5e20] text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest flex items-center gap-1 border border-[#4caf50]/30 shrink-0">
                           <span className="material-symbols-outlined text-[12px]">check_circle</span> Completed
                         </span>
@@ -94,10 +96,10 @@ export default function TopicDetail() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-headline font-bold text-lg group-hover:text-primary transition-colors">{quiz.title}</h3>
-                      {userProgress[topicId]?.quizzes[quiz.id]?.completed ? (
+                      {userProgress[topicId]?.quizzes?.[quiz.id]?.completed ? (
                         <span className="bg-[#e8f5e9] text-[#1b5e20] text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest flex items-center gap-1 border border-[#4caf50]/30">
                           <span className="material-symbols-outlined text-[12px]">check_circle</span> 
-                          Best: {userProgress[topicId].quizzes[quiz.id].bestScore}/3
+                          Best: {userProgress[topicId]?.quizzes?.[quiz.id]?.bestScore}/3
                         </span>
                       ) : (
                         <span className="bg-surface-variant text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest">
