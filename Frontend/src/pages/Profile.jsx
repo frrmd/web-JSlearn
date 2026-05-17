@@ -80,8 +80,9 @@ export default function Profile() {
               </div>
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h2 className="font-headline font-black text-4xl text-on-surface mb-2">{user.name}</h2>
-              <p className="text-on-surface-variant font-medium text-lg mb-6">@{user.username}</p>
+              <h2 className="font-headline font-black text-4xl text-on-surface mb-1">@{user.username}</h2>
+              {user.bio && <p className="text-on-surface-variant font-medium text-base mb-1">{user.bio}</p>}
+              <p className="text-on-surface-variant/60 text-sm mb-6">{user.name}</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
                 <button
                   onClick={() => navigate('/settings')}

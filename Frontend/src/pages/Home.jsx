@@ -145,7 +145,7 @@ export default function Home() {
                 <h4 className="font-headline font-extrabold text-lg">Leaderboard Progress</h4>
                 {userAbove ? (
                   <p className="text-sm text-on-surface-variant mt-1">
-                    You need <strong className="text-primary">{xpGap.toLocaleString()} XP</strong> to overtake <strong>{userAbove.name}</strong>
+                    You need <strong className="text-primary">{xpGap.toLocaleString()} XP</strong> to overtake <strong>@{userAbove.username}</strong>
                   </p>
                 ) : (
                   <p className="text-sm text-on-surface-variant mt-1">🏆 You're at the top of the leaderboard!</p>

@@ -82,7 +82,7 @@ export default function Leaderboard() {
                 <div className="absolute -top-4 -right-2 bg-[#C0C0C0] text-white rounded-full w-8 h-8 flex items-center justify-center font-black border-4 border-background z-10">2</div>
                 <img className="w-20 h-20 rounded-3xl object-cover border-4 border-surface-container shadow-xl rotate-[-3deg] group-hover:rotate-0 transition-transform bg-surface-variant" alt="User avatar" src={topUsers[1].avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=2'} onError={(e) => { e.target.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=2'; }} />
               </div>
-              <p className="font-headline font-bold text-on-surface text-sm">{topUsers[1].name}</p>
+              <p className="font-headline font-bold text-on-surface text-sm">@{topUsers[1].username}</p>
               <p className="text-secondary font-bold text-xs uppercase tracking-tighter">{topUsers[1].total_xp.toLocaleString()} XP</p>
               <div className="h-16 w-full bg-surface-container rounded-t-2xl mt-4 flex items-end justify-center pb-2">
                 <span className="material-symbols-outlined text-outline-variant opacity-30">workspace_premium</span>
@@ -97,7 +97,7 @@ export default function Leaderboard() {
                 <div className="absolute -top-6 -right-2 bg-[#FFD700] text-on-primary-container rounded-full w-10 h-10 flex items-center justify-center font-black border-4 border-background z-10 shadow-lg">1</div>
                 <img className="w-24 h-24 rounded-[2.5rem] object-cover border-4 border-primary shadow-2xl transition-transform bg-surface-variant" alt="User avatar" src={topUsers[0].avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=1'} onError={(e) => { e.target.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=1'; }} />
               </div>
-              <p className="font-headline font-extrabold text-primary text-base">{topUsers[0].name}</p>
+              <p className="font-headline font-extrabold text-primary text-base">@{topUsers[0].username}</p>
               <p className="text-primary-dim font-black text-sm uppercase tracking-tighter">{topUsers[0].total_xp.toLocaleString()} XP</p>
               <div className="h-24 w-full bg-primary-container/30 rounded-t-3xl mt-4 flex items-end justify-center pb-4 border-b-4 border-primary">
                 <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
@@ -112,7 +112,7 @@ export default function Leaderboard() {
                 <div className="absolute -top-4 -right-2 bg-[#CD7F32] text-white rounded-full w-8 h-8 flex items-center justify-center font-black border-4 border-background z-10">3</div>
                 <img className="w-20 h-20 rounded-3xl object-cover border-4 border-surface-container shadow-xl rotate-[3deg] group-hover:rotate-0 transition-transform bg-surface-variant" alt="User avatar" src={topUsers[2].avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=3'} onError={(e) => { e.target.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=3'; }} />
               </div>
-              <p className="font-headline font-bold text-on-surface text-sm">{topUsers[2].name}</p>
+              <p className="font-headline font-bold text-on-surface text-sm">@{topUsers[2].username}</p>
               <p className="text-tertiary font-bold text-xs uppercase tracking-tighter">{topUsers[2].total_xp.toLocaleString()} XP</p>
               <div className="h-12 w-full bg-surface-container rounded-t-2xl mt-4 flex items-end justify-center pb-1">
                 <span className="material-symbols-outlined text-outline-variant opacity-30">workspace_premium</span>
@@ -128,10 +128,9 @@ export default function Leaderboard() {
               <img className="w-12 h-12 rounded-xl object-cover group-hover:scale-110 transition-transform bg-surface-variant" alt="User avatar" src={u.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`} onError={(e) => { e.target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`; }} />
               <div className="flex-grow">
                 <h4 className="font-headline font-bold text-on-surface">
-                  {u.name}
+                  @{u.username}
                   {user && user.id === u.id && <span className="ml-2 text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">You</span>}
                 </h4>
-                <p className="text-xs text-on-surface-variant font-medium">@{u.username}</p>
               </div>
               <div className="text-right">
                 <span className="block font-headline font-black text-primary">{u.total_xp.toLocaleString()}</span>

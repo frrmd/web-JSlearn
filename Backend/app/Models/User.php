@@ -20,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar_url',
+        'bio',
         'total_xp',
         'role',
         'last_login_at',

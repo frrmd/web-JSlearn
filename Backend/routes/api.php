@@ -34,8 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // User profile
     Route::put('/profile', [UserController::class, 'updateProfile']);
 
-    // Admin: list all users
+    // Admin: manage users
     Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
     // Topics — material content & quiz (needs auth to track progress)
     Route::get('/topics/{slug}/materials/{materialId}', [TopicController::class, 'showMaterial']);

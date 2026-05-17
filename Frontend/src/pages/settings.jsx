@@ -34,7 +34,7 @@ export default function Settings() {
   useEffect(() => {
     if (user) {
       setUsername(user.username || '');
-      setAbout(user.bio || 'Hello, I am learning JS!');
+      setAbout(user.bio || '');
       setEmail(user.email || '');
       setAvatarUrl(user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=fallback');
       setSelectedAvatarUrl(user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=fallback');
@@ -46,6 +46,7 @@ export default function Settings() {
       const payload = {
         username,
         avatar_url: avatarUrl,
+        bio: about,
       };
 
       if (password) {
