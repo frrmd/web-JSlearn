@@ -29,7 +29,7 @@ class AuthController extends Controller
             'name'       => $request->name,
             'username'   => explode('@', $request->email)[0],
             'email'      => $request->email,
-            'password'   => Hash::make($request->password),
+            'password'   => $request->password,
             'role'       => 'student',
             'total_xp'   => 0,
             'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($request->name),

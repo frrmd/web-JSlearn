@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockUser, registerUser } from '../data/mockUser';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { register } = useAuth();
   // Form local state
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Form submission handler
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -40,18 +41,17 @@ export default function Register() {
 
     setIsLoading(true);
 
-    // Mock API request
-    setTimeout(() => {
-      const result = registerUser({ name, email, password });
+    // Real API Request
+    const result = await register(name, email, password, confirmPassword);
 
-      if (result.success) {
-        navigate('/login');
-      } else {
-        setErrorMessage(result.message);
-      }
+    if (result.success) {
+      // Typically we auto-login after register in the API, so we go home
+      navigate('/home');
+    } else {
+      setErrorMessage(result.message);
+    }
 
-      setIsLoading(false);
-    }, 600);
+    setIsLoading(false);
   };
 
   return (

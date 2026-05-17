@@ -1,17 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import { allUsers } from '../data/mockUser';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const [users] = useState(() => [...allUsers]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get('/users');
+        setUsers(response.data.data);
+      } catch (error) {
+        console.error('Failed to fetch users', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Kalkulasi Statistik
   const stats = useMemo(() => {
     const totalUsers = users.length;
-    const totalAdmins = users.filter(u => u.role === 'Admin').length;
-    const activeStudents = users.filter(u => u.role === 'Student' && u.status === 'active').length;
-    const totalXP = users.reduce((sum, u) => sum + (u.xp || 0), 0);
+    const totalAdmins = users.filter(u => u.role === 'admin').length;
+    const activeStudents = users.filter(u => u.role === 'student').length; // Assuming all returned are active for now
+    const totalXP = users.reduce((sum, u) => sum + (u.total_xp || 0), 0);
 
     return { totalUsers, totalAdmins, activeStudents, totalXP };
   }, [users]);
@@ -19,10 +34,14 @@ export default function AdminDashboard() {
   // Kalkulasi Top 5 Students
   const topStudents = useMemo(() => {
     return [...users]
-      .filter(u => u.role === 'Student')
-      .sort((a, b) => b.xp - a.xp)
+      .filter(u => u.role === 'student')
+      .sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0))
       .slice(0, 5);
   }, [users]);
+
+  if (loading) {
+    return <div className="p-8 bg-[#fbffe2] min-h-screen text-[#313c0f] text-center">Loading dashboard...</div>;
+  }
 
   return (
     <div className="p-8 bg-[#fbffe2] min-h-screen text-[#313c0f] pb-24">
@@ -77,16 +96,21 @@ export default function AdminDashboard() {
                     </td>
                     <td className="p-4 border-b border-[#b2bf85]/10 font-medium">
                       <div className="flex items-center gap-3">
-                        <img src={user.avatarUrl} alt="avatar" className="w-8 h-8 rounded-full border border-gray-200" />
+                        <img src={user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=fallback'} alt="avatar" className="w-8 h-8 rounded-full border border-gray-200" />
                         {user.name}
                       </div>
                     </td>
                     <td className="p-4 border-b border-[#b2bf85]/10 text-gray-500 text-sm">{user.email}</td>
                     <td className="p-4 border-b border-[#b2bf85]/10 text-right font-bold text-[#2e7300] font-headline">
-                      {user.xp.toLocaleString()} XP
+                      {(user.total_xp || 0).toLocaleString()} XP
                     </td>
                   </tr>
                 ))}
+                {topStudents.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="p-8 text-center text-gray-500">Belum ada data siswa.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

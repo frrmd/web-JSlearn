@@ -1,31 +1,72 @@
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockUser, getLeaderboard, getCurrentUserRank } from '../data/mockUser';
-import { mockCourses } from '../data/mockCourses';
-import { calculateProgress } from '../data/userProgress';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 import TopAppBar from '../components/TopAppBar';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [topicsProgress, setTopicsProgress] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch rank and leaderboard data
-  const leaderboard = getLeaderboard();
-  const globalRank = getCurrentUserRank();
-  const userAbove = globalRank > 1 ? leaderboard[globalRank - 2] : null;
-  const xpGap = userAbove ? userAbove.xp - mockUser.totalXp : 0;
-  const xpGapProgress = userAbove
-    ? Math.min(100, Math.round((mockUser.totalXp / userAbove.xp) * 100))
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchHomeData = async () => {
+      try {
+        const [leaderboardRes, topicsRes, progressRes] = await Promise.all([
+          api.get('/leaderboard'),
+          api.get('/topics'),
+          api.get('/progress/topics')
+        ]);
+
+        setLeaderboard(leaderboardRes.data.data);
+        setTopics(topicsRes.data.data);
+        setTopicsProgress(progressRes.data.data);
+      } catch (error) {
+        console.error('Failed to fetch home data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHomeData();
+  }, [user]);
+
+  if (!user || loading) {
+    return <div className="pt-24 text-center">Loading dashboard...</div>;
+  }
+
+  // Calculate Rank and XP Gap
+  const myEntry = leaderboard.find(u => u.id === user.id);
+  const globalRank = myEntry ? myEntry.rank : null;
+  const userAbove = globalRank && globalRank > 1 ? leaderboard[globalRank - 2] : null;
+  
+  const xpGap = userAbove ? userAbove.total_xp - user.total_xp : 0;
+  const xpGapProgress = userAbove && userAbove.total_xp > 0
+    ? Math.min(100, Math.round((user.total_xp / userAbove.total_xp) * 100))
     : 100;
 
-  // Map courses with current progress
-  const coursesWithProgress = mockCourses.map(course => ({
-    ...course,
-    progress: calculateProgress(course.id)
-  }));
+  // Map topics with real progress from backend
+  const coursesWithProgress = topics.map(topic => {
+    const prog = topicsProgress.find(p => p.topic_id === topic.id);
+    return {
+      ...topic,
+      progress: prog ? prog.progress_pct : 0,
+      colorTheme: 'primary',
+      icon: 'terminal'
+    };
+  });
 
-  // Determine the next topic to continue
-  const continueTopic = coursesWithProgress
-    .filter(t => t.progress < 100)
-    .sort((a, b) => b.progress - a.progress)[0];
+  // Continue Learning: pick the topic with the highest progress that isn't 100%
+  const inProgressTopics = coursesWithProgress.filter(t => t.progress < 100);
+  const continueTopic = inProgressTopics.length > 0
+    ? inProgressTopics.reduce((best, t) => t.progress > best.progress ? t : best, inProgressTopics[0])
+    : null;
 
   return (
 
@@ -41,36 +82,40 @@ export default function Home() {
               <>
                 <div className="flex-1 space-y-4 z-10">
                   <div className="flex items-center gap-3">
-                    <span className={`inline-block px-3 py-1 bg-${continueTopic.colorTheme || 'tertiary'}/10 text-${continueTopic.colorTheme || 'tertiary'} text-xs font-bold rounded-full uppercase tracking-widest font-headline`}>
-                      {continueTopic.currentUnit || `Unit: ${continueTopic.title}`}
+                    <span className={`inline-block px-3 py-1 bg-${continueTopic.colorTheme}/10 text-${continueTopic.colorTheme} text-xs font-bold rounded-full uppercase tracking-widest font-headline`}>
+                      Unit: {continueTopic.title}
                     </span>
                     <span className="inline-block px-3 py-1 bg-surface-variant text-on-surface-variant text-xs font-bold rounded-full uppercase tracking-widest font-headline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">pending</span> In Progress
+                      {continueTopic.progress > 0 ? (
+                        <><span className="material-symbols-outlined text-[14px]">trending_up</span> {continueTopic.progress}% Complete</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-[14px]">pending</span> Pending</>
+                      )}
                     </span>
                   </div>
 
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-primary uppercase tracking-wider">{continueTopic.title}</p>
-                    <p className="text-sm text-on-surface-variant mb-2">{continueTopic.materials?.[0]?.description || `Overview of ${continueTopic.title}`}</p>
+                    <p className="text-sm text-on-surface-variant mb-2">{continueTopic.description || `Overview of ${continueTopic.title}`}</p>
                     <h3 className="text-3xl font-black font-headline leading-tight">
-                      {continueTopic.currentLesson || `Learn ${continueTopic.title}`}
+                      Learn {continueTopic.title}
                     </h3>
                   </div>
 
                   <button
-                    onClick={() => navigate(`/topic/${continueTopic.id}`)}
+                    onClick={() => navigate(`/topic/${continueTopic.slug}`)}
                     className="relative mt-4 group"
                   >
                     <div className="absolute inset-0 bg-primary-dim rounded-xl translate-y-1"></div>
                     <div className="relative bg-primary text-white font-black font-headline px-10 py-4 rounded-xl active:translate-y-1 transition-transform flex items-center gap-2">
-                      CONTINUE LEARNING
+                      START LEARNING
                       <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
                     </div>
                   </button>
                 </div>
 
-                <div className={`relative w-40 h-40 bg-${continueTopic.colorTheme || 'primary'}-container rounded-full flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-500`}>
-                  <span className={`material-symbols-outlined text-6xl text-${continueTopic.colorTheme || 'primary'}`} style={{ fontVariationSettings: "'FILL' 1" }}>{continueTopic.icon || 'terminal'}</span>
+                <div className={`relative w-40 h-40 bg-${continueTopic.colorTheme}-container rounded-full flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-transform duration-500`}>
+                  <span className={`material-symbols-outlined text-6xl text-${continueTopic.colorTheme}`} style={{ fontVariationSettings: "'FILL' 1" }}>{continueTopic.icon}</span>
                   <div className="absolute -top-4 -right-2 bg-secondary text-white p-3 rounded-2xl shadow-lg -rotate-12">
                     <span className="material-symbols-outlined">auto_awesome</span>
                   </div>
@@ -111,7 +156,7 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex justify-between text-sm font-bold font-headline">
                 <span>Your XP</span>
-                <span>{mockUser.totalXp.toLocaleString()} {userAbove ? `/ ${userAbove.xp.toLocaleString()}` : ''} XP</span>
+                <span>{user.total_xp.toLocaleString()} {userAbove ? `/ ${userAbove.total_xp.toLocaleString()}` : ''} XP</span>
               </div>
               <div className="h-3 bg-white/50 rounded-full overflow-hidden">
                 <div className="h-full bg-secondary rounded-full transition-all duration-500" style={{ width: `${xpGapProgress}%` }}></div>
@@ -134,23 +179,18 @@ export default function Home() {
             <span className="h-px flex-1 bg-surface-container-high"></span>
           </h4>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {mockUser.recentTopics.map(topicId => {
-              const course = mockCourses.find(c => c.id === topicId);
-              if (!course) return null;
-
-              return (
-                <div
-                  key={course.id}
-                  onClick={() => navigate(`/topic/${course.id}`)}
-                  className="cursor-pointer bg-surface-container-highest p-4 rounded-lg flex flex-col items-center gap-3 text-center border-b-4 border-on-surface-variant/10 hover:bg-surface-variant transition-colors group"
-                >
-                  <div className={`w-12 h-12 bg-${course.colorTheme}-container rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
-                    <span className={`material-symbols-outlined text-2xl text-${course.colorTheme}`} style={{ fontVariationSettings: "'FILL' 1" }}>{course.icon}</span>
-                  </div>
-                  <span className="text-sm font-bold font-headline">{course.title}</span>
+            {topics.slice(0, 4).map(course => (
+              <div
+                key={course.id}
+                onClick={() => navigate(`/topic/${course.slug}`)}
+                className="cursor-pointer bg-surface-container-highest p-4 rounded-lg flex flex-col items-center gap-3 text-center border-b-4 border-on-surface-variant/10 hover:bg-surface-variant transition-colors group"
+              >
+                <div className={`w-12 h-12 bg-primary-container rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
+                  <span className={`material-symbols-outlined text-2xl text-primary`} style={{ fontVariationSettings: "'FILL' 1" }}>terminal</span>
                 </div>
-              );
-            })}
+                <span className="text-sm font-bold font-headline">{course.title}</span>
+              </div>
+            ))}
           </div>
         </section>
 

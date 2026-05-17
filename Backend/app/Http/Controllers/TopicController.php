@@ -78,10 +78,7 @@ class TopicController extends Controller
         }
 
         $quiz = $topic->quizzes()
-            ->with(['questions.options' => function ($q) {
-                // Hide is_correct from the response — grading happens server-side
-                $q->select('id', 'quiz_question_id', 'option_text');
-            }])
+            ->with(['questions.options'])
             ->find($quizId);
 
         if (!$quiz) {

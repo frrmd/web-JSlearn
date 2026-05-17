@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/progress/material',        [ProgressController::class, 'completeMaterial']);
     Route::post('/progress/quiz',            [ProgressController::class, 'submitQuiz']);
     Route::get('/progress/summary',          [ProgressController::class, 'summary']);
+    Route::get('/progress/topics',           [ProgressController::class, 'allTopicsProgress']);
     Route::get('/progress/topic/{slug}',     [ProgressController::class, 'topicProgress']);
 
     // Achievements

@@ -15,20 +15,20 @@ class UserSeeder extends Seeder
             'name'      => 'Farras M',
             'username'  => 'JS Master',
             'email'     => 'farras@gmail.com',
-            'password'  => Hash::make('password123'),
+            'password'  => 'password123',
             'role'      => 'admin',
-            'total_xp'  => 12500,
+            'total_xp'  => 0,
             'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
         ]);
 
         // Student accounts
         $students = [
-            ['name' => 'Sarah Chen',   'username' => 'sarah_c',    'email' => 'sarah@example.com',  'total_xp' => 9800],
-            ['name' => 'Alex R.',      'username' => 'alex_r',     'email' => 'alex@example.com',   'total_xp' => 8420],
-            ['name' => 'Jordan K.',    'username' => 'jordan_k',   'email' => 'jordan@example.com', 'total_xp' => 7900],
-            ['name' => 'Harun',        'username' => 'harun_dev',  'email' => 'harun@gmail.com',    'total_xp' => 5420],
-            ['name' => 'Riley Smith',  'username' => 'riley_s',    'email' => 'riley@example.com',  'total_xp' => 4890],
-            ['name' => 'Dave G.',      'username' => 'dave_g',     'email' => 'dave@example.com',   'total_xp' => 4200],
+            ['name' => 'Sarah Chen',   'username' => 'sarah_c',    'email' => 'sarah@example.com'],
+            ['name' => 'Alex R.',      'username' => 'alex_r',     'email' => 'alex@example.com'],
+            ['name' => 'Jordan K.',    'username' => 'jordan_k',   'email' => 'jordan@example.com'],
+            ['name' => 'Harun',        'username' => 'harun_dev',  'email' => 'harun@gmail.com'],
+            ['name' => 'Riley Smith',  'username' => 'riley_s',    'email' => 'riley@example.com'],
+            ['name' => 'Dave G.',      'username' => 'dave_g',     'email' => 'dave@example.com'],
         ];
 
         foreach ($students as $i => $s) {
@@ -36,9 +36,9 @@ class UserSeeder extends Seeder
                 'name'       => $s['name'],
                 'username'   => $s['username'],
                 'email'      => $s['email'],
-                'password'   => Hash::make('password123'),
+                'password'   => 'password123',
                 'role'       => 'student',
-                'total_xp'   => $s['total_xp'],
+                'total_xp'   => 0,
                 'avatar_url' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $s['username'],
             ]);
         }

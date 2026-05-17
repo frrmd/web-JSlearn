@@ -1,21 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { mockCourses } from '../data/mockCourses';
-import { userProgress } from '../data/userProgress';
-import { addRecentTopic } from '../data/mockUser';
+import api from '../services/api';
 
 export default function TopicDetail() {
-  const { topicId } = useParams();
+  const { topicId } = useParams(); // actually slug
   const navigate = useNavigate();
   
-  // Find selected course data
-  const course = mockCourses.find(c => c.id === topicId) || mockCourses[0];
+  const [topic, setTopic] = useState(null);
+  const [progress, setProgress] = useState({ completed_material_ids: [], quiz_progress: {} });
+  const [loading, setLoading] = useState(true);
 
-  // Effect to record recent topic
   useEffect(() => {
-    addRecentTopic(course.id);
-  }, [course.id]);
+    const fetchTopicData = async () => {
+      try {
+        const [topicRes, progressRes] = await Promise.all([
+          api.get(`/topics/${topicId}`),
+          api.get(`/progress/topic/${topicId}`)
+        ]);
+
+        setTopic(topicRes.data.data);
+        setProgress(progressRes.data.data);
+      } catch (error) {
+        console.error('Failed to fetch topic detail', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTopicData();
+  }, [topicId]);
+
+  if (loading || !topic) {
+    return <div className="pt-24 text-center font-body text-on-background">Loading topic details...</div>;
+  }
+
+  // Fallbacks for UI styling since these might not be in DB yet
+  const colorTheme = 'primary';
+  const icon = 'terminal';
 
   return (
     <div className="bg-background font-body text-on-surface min-h-screen pb-32">
@@ -25,12 +46,12 @@ export default function TopicDetail() {
       <main className="pt-12 px-6 max-w-5xl mx-auto md:ml-64 md:px-12 space-y-10">
         <header className="mb-8 bg-surface-container-lowest p-8 rounded-3xl border-2 border-outline-variant/20 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className={`w-20 h-20 bg-${course.colorTheme}-container rounded-[2rem] flex items-center justify-center shadow-inner`}>
-              <span className={`material-symbols-outlined text-5xl text-${course.colorTheme}`} style={{ fontVariationSettings: "'FILL' 1" }}>{course.icon}</span>
+            <div className={`w-20 h-20 bg-${colorTheme}-container rounded-[2rem] flex items-center justify-center shadow-inner`}>
+              <span className={`material-symbols-outlined text-5xl text-${colorTheme}`} style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
             </div>
             <div>
               <p className="text-on-surface-variant font-bold text-sm uppercase tracking-widest font-headline mb-1">Topic details</p>
-              <h1 className="text-4xl font-black font-headline text-on-surface">{course.title}</h1>
+              <h1 className="text-4xl font-black font-headline text-on-surface">{topic.title}</h1>
             </div>
           </div>
         </header>
@@ -41,7 +62,10 @@ export default function TopicDetail() {
             Learning Material
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {course.materials?.map((material) => (
+            {topic.materials?.map((material) => {
+              const isCompleted = progress.completed_material_ids?.includes(material.id);
+              
+              return (
               <div 
                 key={material.id}
                 onClick={() => navigate(`/topic/${topicId}/material/${material.id}`)}
@@ -54,7 +78,7 @@ export default function TopicDetail() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h3 className="font-headline font-bold text-lg group-hover:text-primary transition-colors pr-2">{material.title}</h3>
-                      {userProgress[topicId]?.materials?.[material.id]?.completed ? (
+                      {isCompleted ? (
                         <span className="bg-[#e8f5e9] text-[#1b5e20] text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest flex items-center gap-1 border border-[#4caf50]/30 shrink-0">
                           <span className="material-symbols-outlined text-[12px]">check_circle</span> Completed
                         </span>
@@ -64,18 +88,17 @@ export default function TopicDetail() {
                         </span>
                       )}
                     </div>
-                    <p className="text-on-surface-variant mt-1 font-medium text-sm line-clamp-2">{material.description}</p>
+                    <p className="text-on-surface-variant mt-1 font-medium text-sm line-clamp-2">{material.description || 'Learn ' + material.title}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between border-t border-outline-variant/20 pt-4 mt-auto">
                   <div className="flex gap-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary/10 px-2 py-1 rounded-md">Theory</span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-tertiary bg-tertiary/10 px-2 py-1 rounded-md">{material.readTime}</span>
                   </div>
                   <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </section>
 
@@ -85,7 +108,11 @@ export default function TopicDetail() {
             Quizzes
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {course.quizzes?.map((quiz, index) => (
+            {topic.quizzes?.map((quiz, index) => {
+              const quizProg = progress.quiz_progress?.[quiz.id];
+              const isCompleted = quizProg && quizProg.best_score >= 60; // assumption: completed if score >= 60
+
+              return (
               <div 
                 key={quiz.id}
                 onClick={() => navigate(`/topic/${topicId}/quiz/${quiz.id}`)}
@@ -96,10 +123,10 @@ export default function TopicDetail() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-headline font-bold text-lg group-hover:text-primary transition-colors">{quiz.title}</h3>
-                      {userProgress[topicId]?.quizzes?.[quiz.id]?.completed ? (
+                      {isCompleted ? (
                         <span className="bg-[#e8f5e9] text-[#1b5e20] text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest flex items-center gap-1 border border-[#4caf50]/30">
                           <span className="material-symbols-outlined text-[12px]">check_circle</span> 
-                          Best: {userProgress[topicId]?.quizzes?.[quiz.id]?.bestScore}/3
+                          Best: {quizProg.best_score}%
                         </span>
                       ) : (
                         <span className="bg-surface-variant text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest">
@@ -107,14 +134,14 @@ export default function TopicDetail() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm font-medium text-on-surface-variant">{quiz.description}</p>
+                    <p className="text-sm font-medium text-on-surface-variant">{quiz.description || `Test your knowledge on ${topic.title}`}</p>
                   </div>
                 </div>
                 <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
                   <span className="material-symbols-outlined text-primary group-hover:text-white">play_arrow</span>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </section>
 

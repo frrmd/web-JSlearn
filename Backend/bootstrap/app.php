@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Sanctum stateful domains (cookie-based auth for SPA)
-        $middleware->statefulApi();
+        // $middleware->statefulApi();
 
         // CORS: allow React dev server
         $middleware->api(prepend: [

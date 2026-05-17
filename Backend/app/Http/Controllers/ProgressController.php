@@ -41,10 +41,16 @@ class ProgressController extends Controller
             'material_id' => $request->material_id,
         ]);
 
+        // Award XP for material completion (e.g., 20 XP)
+        $user->increment('total_xp', 20);
+
         // Check achievements after completing material
         $this->checkAchievements($user);
 
-        return $this->success(null, 'Material completed', 201);
+        return $this->success([
+            'total_xp' => $user->fresh()->total_xp,
+            'xp_earned' => 20
+        ], 'Material completed', 201);
     }
 
     /**
@@ -170,6 +176,54 @@ class ProgressController extends Controller
             'completed_material_ids' => $completedMaterialIds,
             'quiz_progress'          => $quizProgress,
         ]);
+    }
+
+    /**
+     * Get progress percentage for all topics for the current user.
+     */
+    public function allTopicsProgress(Request $request)
+    {
+        $user = $request->user();
+        $topics = Topic::with(['materials', 'quizzes'])->orderBy('order')->get();
+
+        $completedMaterialIds = UserMaterialProgress::where('user_id', $user->id)
+            ->pluck('material_id')
+            ->toArray();
+
+        $quizProgress = UserQuizProgress::where('user_id', $user->id)
+            ->get()
+            ->keyBy('quiz_id');
+
+        $result = $topics->map(function ($topic) use ($completedMaterialIds, $quizProgress) {
+            $totalMaterials = $topic->materials->count();
+            $totalQuizzes = $topic->quizzes->count();
+            $totalItems = $totalMaterials + $totalQuizzes;
+
+            $completedMaterials = $topic->materials->filter(function ($m) use ($completedMaterialIds) {
+                return in_array($m->id, $completedMaterialIds);
+            })->count();
+
+            $completedQuizzes = $topic->quizzes->filter(function ($q) use ($quizProgress) {
+                $prog = $quizProgress->get($q->id);
+                return $prog && $prog->best_score >= 60;
+            })->count();
+
+            $completedItems = $completedMaterials + $completedQuizzes;
+            $progressPct = $totalItems > 0 ? round(($completedItems / $totalItems) * 100) : 0;
+
+            return [
+                'topic_id'            => $topic->id,
+                'slug'                => $topic->slug,
+                'title'               => $topic->title,
+                'total_materials'     => $totalMaterials,
+                'total_quizzes'       => $totalQuizzes,
+                'completed_materials' => $completedMaterials,
+                'completed_quizzes'   => $completedQuizzes,
+                'progress_pct'        => $progressPct,
+            ];
+        });
+
+        return $this->success($result);
     }
 
     /**

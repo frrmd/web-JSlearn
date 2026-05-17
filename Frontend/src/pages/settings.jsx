@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockUser, allUsers } from '../data/mockUser';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 const AVATAR_OPTIONS = [
   'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
@@ -15,31 +16,53 @@ const AVATAR_OPTIONS = [
 
 export default function Settings() {
   const navigate = useNavigate();
+  const { user, setUser, logout } = useAuth();
 
   // Account form local state
-  const [username, setUsername] = useState(mockUser.username);
-  const [about, setAbout] = useState(mockUser.bio);
-  const [email] = useState(mockUser.email);
+  const [username, setUsername] = useState('');
+  const [about, setAbout] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState(mockUser.avatarUrl);
+  const [avatarUrl, setAvatarUrl] = useState('');
   const [saved, setSaved] = useState(false);
 
   // Avatar Modal State
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
-  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(mockUser.avatarUrl);
+  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState('');
   const [uploadPreview, setUploadPreview] = useState(null);
 
-  const handleSaveAccount = () => {
-    // Update mock user data
-    const currentUser = allUsers.find(u => u.isCurrentUser);
-    if (currentUser) {
-      currentUser.username = username;
-      currentUser.avatarUrl = avatarUrl;
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username || '');
+      setAbout(user.bio || 'Hello, I am learning JS!');
+      setEmail(user.email || '');
+      setAvatarUrl(user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=fallback');
+      setSelectedAvatarUrl(user.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=fallback');
     }
-    console.log('Account updated (mock):', { username, about, avatarUrl, password: password ? '***' : '(unchanged)' });
+  }, [user]);
 
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  const handleSaveAccount = async () => {
+    try {
+      const payload = {
+        username,
+        avatar_url: avatarUrl,
+      };
+
+      if (password) {
+        payload.password = password;
+        payload.password_confirmation = password;
+      }
+
+      const response = await api.put('/profile', payload);
+      setUser(response.data.data);
+      
+      setSaved(true);
+      setPassword('');
+      setTimeout(() => setSaved(false), 2000);
+    } catch (error) {
+      console.error('Failed to update profile', error);
+      alert(error.response?.data?.message || 'Failed to update profile');
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -62,6 +85,13 @@ export default function Settings() {
     setAvatarUrl(selectedAvatarUrl);
     setIsAvatarModalOpen(false);
   };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  if (!user) return <div className="pt-24 text-center">Loading settings...</div>;
 
   return (
     <div className="bg-background text-on-background font-body min-h-screen pb-32 selection:bg-primary-container">
@@ -243,7 +273,7 @@ export default function Settings() {
         {/* Sign Out Button */}
         <div className="pt-6 pb-12">
           <button
-            onClick={() => navigate('/')}
+            onClick={handleLogout}
             className="w-full bg-error text-on-error font-headline font-bold text-lg py-4 rounded-xl shadow-[0_4px_0_0_#8b0000] active:shadow-[0_0px_0_0_#8b0000] active:translate-y-1 transition-all flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined">logout</span>

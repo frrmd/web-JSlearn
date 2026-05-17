@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { mockUser } from '../data/mockUser';
-
 export default function BottomNav() {
   const location = useLocation();
 
