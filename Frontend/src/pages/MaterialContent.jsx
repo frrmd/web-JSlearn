@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import FocusModeToggle from '../components/FocusModeToggle';
 import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { useLayout } from '../contexts/LayoutContext';
 
 export default function MaterialContent() {
   const { topicId, materialId } = useParams(); // topicId is slug here
   const navigate = useNavigate();
+  const { focusMode, disableFocusMode } = useLayout();
+
+  // Auto-disable focus mode when leaving material page
+  useEffect(() => {
+    return () => disableFocusMode();
+  }, []);
 
   const [material, setMaterial] = useState(null);
   const [topic, setTopic] = useState(null);
@@ -63,8 +71,9 @@ export default function MaterialContent() {
   return (
     <div className="bg-background font-body text-on-surface min-h-screen pb-32">
       <Sidebar />
+      <FocusModeToggle />
 
-      <main className="pt-28 px-6 max-w-4xl mx-auto md:ml-64 md:px-12 space-y-10">
+      <main className={`pt-28 px-6 max-w-4xl md:px-12 space-y-10 transition-all duration-300 ease-out ${focusMode ? 'mx-auto' : 'md:ml-64 mx-auto'}`}>
         <button
           onClick={() => navigate(`/topic/${topicId}`)}
           className="flex items-center gap-2 text-on-surface-variant font-bold font-headline hover:text-primary transition-colors"

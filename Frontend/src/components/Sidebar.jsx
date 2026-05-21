@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLayout } from '../contexts/LayoutContext';
 
 export default function Sidebar() {
   const { user } = useAuth();
+  const { focusMode } = useLayout();
 
   return (
-    <aside className="fixed left-0 top-0 h-full flex flex-col p-6 bg-[#fbffe2] dark:bg-slate-950 w-64 border-r-4 border-[#2e7300]/10 dark:border-white/5 z-50 hidden md:flex">
+    <aside className={`fixed left-0 top-0 h-full flex flex-col p-6 bg-[#fbffe2] dark:bg-slate-950 w-64 border-r-4 border-[#2e7300]/10 dark:border-white/5 z-50 hidden md:flex transition-transform duration-300 ease-out ${focusMode ? '-translate-x-full' : 'translate-x-0'}`}>
       <div className="text-2xl font-black text-[#2e7300] dark:text-[#58CC02] mb-8 font-headline italic">JSlearn</div>
       <nav className="flex-1 flex flex-col gap-2">
         {/*home*/}

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { LayoutProvider } from './contexts/LayoutContext';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Path from './pages/Path';
@@ -85,7 +86,9 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <LayoutProvider>
+        <AppContent />
+      </LayoutProvider>
     </BrowserRouter>
   );
 }

@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../services/api';
 import Sidebar from '../components/Sidebar';
+import FocusModeToggle from '../components/FocusModeToggle';
 import { useAuth } from '../contexts/AuthContext';
+import { useLayout } from '../contexts/LayoutContext';
 
 export default function Quiz() {
   const navigate = useNavigate();
   const { topicId, quizId } = useParams();
+  const { focusMode, disableFocusMode } = useLayout();
+
+  // Auto-disable focus mode when leaving quiz page
+  useEffect(() => {
+    return () => disableFocusMode();
+  }, []);
 
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -155,9 +163,10 @@ export default function Quiz() {
   return (
     <div className="bg-background font-body text-on-surface">
       <Sidebar />
+      <FocusModeToggle />
 
       {/* Main Canvas */}
-      <main className="md:ml-64 min-h-screen p-8 pt-12 flex flex-col items-center">
+      <main className={`min-h-screen p-8 pt-12 flex flex-col items-center transition-[margin] duration-300 ease-out ${focusMode ? 'md:ml-0' : 'md:ml-64'}`}>
         {/* Progress Header */}
         <div className="w-full max-w-3xl mb-12">
           <div className="flex justify-between items-center mb-4">
