@@ -90,14 +90,14 @@ class ProgressController extends Controller
         // Calculate score (0-100)
         $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100) : 0;
 
-        // Update or create quiz progress
-        $progress = UserQuizProgress::updateOrCreate(
-            ['user_id' => $user->id, 'quiz_id' => $quiz->id],
-            [
-                'best_score' => \DB::raw("GREATEST(best_score, {$score})"),
-                'attempts'   => \DB::raw('attempts + 1'),
-            ]
-        );
+        $progress = UserQuizProgress::firstOrNew([
+            'user_id' => $user->id,
+            'quiz_id' => $quiz->id,
+        ]);
+
+        $progress->best_score = max((int) $progress->best_score, $score);
+        $progress->attempts = (int) $progress->attempts + 1;
+        $progress->save();
 
         // Award XP based on score (only if score >= 60)
         $xpEarned = 0;

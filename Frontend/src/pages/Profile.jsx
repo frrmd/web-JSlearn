@@ -96,12 +96,17 @@ export default function Profile() {
           </div>
 
 
-          <div className="md:col-span-1 bg-tertiary-container rounded-lg p-8 chunky-card flex flex-col justify-between text-on-tertiary-container">
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/30 p-3 rounded-2xl">
-                  <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
-                </div>
+          <div className="md:col-span-1 bg-[#AFE7EF] rounded-lg p-8 chunky-card flex flex-col justify-between text-on-tertiary-container">
+  <div className="space-y-6">
+    <div className="flex items-center gap-4">
+      <div className="bg-white/30 p-3 rounded-2xl">
+        <span
+          className="material-symbols-outlined text-3xl text-purple-600"
+          style={{ fontVariationSettings: "'FILL' 1" }}
+        >
+          bolt
+        </span>
+      </div>
                 <div>
                   <p className="font-headline font-black text-3xl">{user.total_xp.toLocaleString()}</p>
                   <p className="font-medium opacity-80">Total XP</p>

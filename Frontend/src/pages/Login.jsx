@@ -74,7 +74,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-4 rounded-xl border-2 border-[#b2bf85]/40 focus:border-[#2e7300] focus:ring-0 outline-none transition-colors bg-[#fbffe2]/30 font-medium"
-              placeholder="ninja@jsmastery.com"
+              placeholder="ninja@JSlearn.com"
             />
           </div>
 

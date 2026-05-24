@@ -11,7 +11,6 @@ export default function Quiz() {
   const { topicId, quizId } = useParams();
   const { focusMode, disableFocusMode } = useLayout();
 
-  // Auto-disable focus mode when leaving quiz page
   useEffect(() => {
     return () => disableFocusMode();
   }, []);
@@ -20,20 +19,14 @@ export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Current question index state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  // User answers map { question_id: option_id }
   const [answers, setAnswers] = useState({});
-  // Selected option state for current question
   const [selectedOptionId, setSelectedOptionId] = useState(null);
 
-  // Answer feedback state
   const [hasChecked, setHasChecked] = useState(false);
   const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
-  
-  // Quiz completion state
+
   const [isFinished, setIsFinished] = useState(false);
-  // Quiz result state from API
   const [quizResult, setQuizResult] = useState(null);
 
   useEffect(() => {
@@ -42,8 +35,7 @@ export default function Quiz() {
         const response = await api.get(`/topics/${topicId}/quizzes/${quizId}`);
         const data = response.data.data;
         setQuiz(data);
-        
-        // Shuffle questions
+
         if (data.questions) {
           setQuestions([...data.questions].sort(() => Math.random() - 0.5));
         }
@@ -91,7 +83,6 @@ export default function Quiz() {
   const currentQuestion = questions[currentQuestionIndex];
   const correctOption = currentQuestion.options.find(o => o.is_correct);
 
-  // Step 1: Check the answer
   const handleCheck = () => {
     if (!selectedOptionId) return;
     const isCorrect = selectedOptionId === correctOption?.id;
@@ -101,7 +92,6 @@ export default function Quiz() {
 
   const { fetchUser } = useAuth();
 
-  // Step 2: Proceed to next question or finish
   const handleNext = async () => {
     const newAnswers = { ...answers, [currentQuestion.id]: selectedOptionId };
     setAnswers(newAnswers);
@@ -165,16 +155,13 @@ export default function Quiz() {
       <Sidebar />
       <FocusModeToggle />
 
-      {/* Main Canvas */}
       <main className={`min-h-screen p-8 pt-12 flex flex-col items-center transition-[margin] duration-300 ease-out ${focusMode ? 'md:ml-0' : 'md:ml-64'}`}>
-        {/* Progress Header */}
         <div className="w-full max-w-3xl mb-12">
           <div className="flex justify-between items-center mb-4">
             <button onClick={() => navigate(`/topic/${topicId}`)} className="p-2 hover:bg-surface-container rounded-full transition-colors inline-flex">
               <span className="material-symbols-outlined text-on-surface-variant">close</span>
             </button>
           </div>
-          {/* Progress Bar */}
           <div className="flex items-center gap-4 mb-8">
             <div className="w-full bg-surface-variant/30 h-3 rounded-full overflow-hidden">
               <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: `${((currentQuestionIndex) / questions.length) * 100}%` }}></div>
@@ -183,7 +170,6 @@ export default function Quiz() {
           </div>
         </div>
 
-        {/* Question Section */}
         <section className="w-full max-w-3xl mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="bg-surface-container rounded-lg p-8 mb-8 border-b-4 border-surface-container-highest">
             <h1 className="font-headline text-3xl font-extrabold text-on-surface leading-tight text-center">
@@ -191,25 +177,20 @@ export default function Quiz() {
             </h1>
           </div>
 
-          {/* Answer Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {currentQuestion.options.map((option, index) => {
               let btnClass = "bg-surface-container-lowest border-outline-variant/20 text-on-surface";
               let idxClass = "bg-surface-container text-on-surface-variant";
 
               if (hasChecked) {
-                // After checking: show correct/incorrect feedback
                 if (option.is_correct) {
-                  // Correct answer always highlighted green
                   btnClass = "bg-[#e8f5e9] border-[#4caf50] border-4 text-[#1b5e20]";
                   idxClass = "bg-[#4caf50] text-white";
                 } else if (option.id === selectedOptionId && !option.is_correct) {
-                  // Selected wrong answer highlighted red
                   btnClass = "bg-[#ffebee] border-[#ef5350] border-4 text-[#b71c1c]";
                   idxClass = "bg-[#ef5350] text-white";
                 }
               } else if (option.id === selectedOptionId) {
-                // Before checking: selected option highlighted
                 btnClass = "bg-surface-container-low border-primary border-4";
                 idxClass = "bg-primary text-on-primary";
               }
@@ -236,7 +217,6 @@ export default function Quiz() {
             })}
           </div>
 
-          {/* Answer Feedback Message */}
           {hasChecked && (
             <div className={`mt-6 p-5 rounded-xl text-center font-headline font-bold text-lg ${isCurrentCorrect ? 'bg-[#e8f5e9] text-[#1b5e20] border-2 border-[#4caf50]/30' : 'bg-[#ffebee] text-[#b71c1c] border-2 border-[#ef5350]/30'}`}>
               {isCurrentCorrect ? (
@@ -254,7 +234,6 @@ export default function Quiz() {
           )}
         </section>
 
-        {/* Bottom Actions */}
         <footer className="w-full max-w-3xl mt-12 flex justify-end items-center mb-10 pb-8">
           {!hasChecked ? (
             <button
@@ -276,7 +255,6 @@ export default function Quiz() {
         </footer>
       </main>
 
-      {/* Side Decoration */}
       <div className="fixed -bottom-20 -right-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl -z-10"></div>
       <div className="fixed top-40 -right-10 w-40 h-40 bg-tertiary/5 rounded-full blur-2xl -z-10"></div>
     </div>
