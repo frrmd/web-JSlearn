@@ -15,6 +15,8 @@ import Register from './pages/Register';
 import TopicDetail from './pages/TopicDetail';
 import MaterialContent from './pages/MaterialContent';
 import AdminDashboard from './pages/AdminDashboard';
+import VerifyOtp from './pages/VerifyOtp';
+import ForgotPassword from './pages/ForgotPassword';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode, role?: string }) => {
@@ -44,6 +46,8 @@ function AppContent() {
                         location.pathname.includes('/topic') || 
                         location.pathname === '/login' || 
                         location.pathname === '/register' || 
+                        location.pathname === '/verify-otp' || 
+                        location.pathname === '/forgot-password' || 
                         location.pathname === '/settings' || 
                         location.pathname.startsWith('/admin');
 
@@ -58,6 +62,8 @@ function AppContent() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         
         {/* Student Routes */}
         <Route path="/home" element={<ProtectedRoute role="student"><Home /></ProtectedRoute>} />

@@ -80,11 +80,33 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyOtpAndRegister = async (email, otp, name, password, password_confirmation) => {
+    try {
+      const response = await api.post('/otp/verify-register', {
+        email,
+        otp,
+        name,
+        password,
+        password_confirmation,
+      });
+      const { user, token } = response.data.data;
+      localStorage.setItem('token', token);
+      setUser(user);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Verification failed',
+      };
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
+    verifyOtpAndRegister,
     logout,
     setUser, // to update profile locally
     fetchUser,

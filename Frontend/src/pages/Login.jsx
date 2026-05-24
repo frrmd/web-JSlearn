@@ -95,7 +95,7 @@ export default function Login() {
               <input type="checkbox" className="rounded text-[#2e7300] focus:ring-[#2e7300] w-4 h-4 border-[#b2bf85]" />
               Remember me
             </label>
-            <a href="#" className="text-[#2e7300] hover:underline">Forgot Password?</a>
+            <span onClick={() => navigate('/forgot-password')} className="text-[#2e7300] hover:underline cursor-pointer">Forgot Password?</span>
           </div>
 
           <button

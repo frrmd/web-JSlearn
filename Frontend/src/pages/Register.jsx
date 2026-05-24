@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -41,17 +42,25 @@ export default function Register() {
 
     setIsLoading(true);
 
-    // Real API Request
-    const result = await register(name, email, password, confirmPassword);
+    try {
+      const response = await api.post('/otp/send', {
+        email,
+        type: 'registration',
+        name,
+        password,
+        password_confirmation: confirmPassword
+      });
 
-    if (result.success) {
-      // Typically we auto-login after register in the API, so we go home
-      navigate('/home');
-    } else {
-      setErrorMessage(result.message);
+      if (response.data.success) {
+        navigate('/verify-otp', { 
+          state: { name, email, password, confirmPassword } 
+        });
+      }
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || 'Gagal mengirim OTP.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

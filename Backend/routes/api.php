@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\UserController;
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
+
+// OTP verification
+Route::post('/otp/send',            [OtpController::class, 'send']);
+Route::post('/otp/verify-register', [OtpController::class, 'verifyRegister']);
+Route::post('/otp/verify-reset-code',[OtpController::class, 'verifyResetCode']);
+Route::post('/otp/reset-password',  [OtpController::class, 'resetPassword']);
 
 // Leaderboard is public
 Route::get('/leaderboard', [UserController::class, 'leaderboard']);
