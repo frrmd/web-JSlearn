@@ -223,7 +223,20 @@ class ProgressController extends Controller
             ->get()
             ->keyBy('quiz_id');
 
-        $result = $topics->map(function ($topic) use ($user, $completedMaterialIds, $quizProgress) {
+        // Preload latest interaction times for materials and quizzes to avoid N+1 inside loop
+        $latestMaterialAccesses = \App\Models\UserMaterialProgress::where('user_id', $user->id)
+            ->selectRaw('MAX(user_material_progress.updated_at) as latest_updated_at, materials.topic_id')
+            ->join('materials', 'materials.id', '=', 'user_material_progress.material_id')
+            ->groupBy('materials.topic_id')
+            ->pluck('latest_updated_at', 'topic_id');
+
+        $latestQuizAccesses = \App\Models\UserQuizProgress::where('user_id', $user->id)
+            ->selectRaw('MAX(user_quiz_progress.updated_at) as latest_updated_at, quizzes.topic_id')
+            ->join('quizzes', 'quizzes.id', '=', 'user_quiz_progress.quiz_id')
+            ->groupBy('quizzes.topic_id')
+            ->pluck('latest_updated_at', 'topic_id');
+
+        $result = $topics->map(function ($topic) use ($user, $completedMaterialIds, $quizProgress, $latestMaterialAccesses, $latestQuizAccesses) {
             $totalMaterials = $topic->materials->count();
             $totalQuizzes = $topic->quizzes->count();
             $totalItems = $totalMaterials + $totalQuizzes;
@@ -241,13 +254,8 @@ class ProgressController extends Controller
             $progressPct = $totalItems > 0 ? round(($completedItems / $totalItems) * 100) : 0;
 
             // Find the latest interaction time for this topic
-            $latestMaterialAccess = \App\Models\UserMaterialProgress::where('user_id', $user->id)
-                ->whereIn('material_id', $topic->materials->pluck('id'))
-                ->max('updated_at');
-
-            $latestQuizAccess = \App\Models\UserQuizProgress::where('user_id', $user->id)
-                ->whereIn('quiz_id', $topic->quizzes->pluck('id'))
-                ->max('updated_at');
+            $latestMaterialAccess = $latestMaterialAccesses->get($topic->id);
+            $latestQuizAccess = $latestQuizAccesses->get($topic->id);
 
             $dates = array_filter([$latestMaterialAccess, $latestQuizAccess]);
             $lastAccessedAt = empty($dates) ? null : max($dates);
@@ -281,13 +289,15 @@ class ProgressController extends Controller
         $totalMaterials = \App\Models\Material::count();
         $allMaterialsDone = $materialsCompleted >= $totalMaterials && $totalMaterials > 0;
 
+        $unlockedAchievementIds = UserAchievement::where('user_id', $user->id)
+            ->pluck('achievement_id')
+            ->toArray();
+
         $achievements = Achievement::all();
 
         foreach ($achievements as $achievement) {
             // Skip if already unlocked
-            $alreadyUnlocked = UserAchievement::where('user_id', $user->id)
-                ->where('achievement_id', $achievement->id)
-                ->exists();
+            $alreadyUnlocked = in_array($achievement->id, $unlockedAchievementIds);
 
             if ($alreadyUnlocked) continue;
 

@@ -209,8 +209,11 @@ export default function Home() {
 
       </main>
 
-      <div className="fixed bottom-28 right-6 md:hidden">
-        <button className="w-16 h-16 bg-primary text-white rounded-full shadow-lg flex items-center justify-center border-b-4 border-primary-dim active:translate-y-1 active:border-b-0 transition-all">
+      <div className="fixed bottom-28 right-6 md:hidden z-50">
+        <button 
+          onClick={() => navigate('/path')}
+          className="w-16 h-16 bg-primary text-white rounded-full shadow-lg flex items-center justify-center border-b-4 border-primary-dim active:translate-y-1 active:border-b-0 transition-all"
+        >
           <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>menu_book</span>
         </button>
       </div>

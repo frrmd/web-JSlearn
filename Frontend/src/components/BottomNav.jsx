@@ -15,8 +15,8 @@ export default function BottomNav() {
       <div className="flex items-center w-full px-2 pb-6 pt-3">
 
         {/* Home */}
-        <Link to="/home" className={isActive('/') ? activeStyle : inactiveStyle}>
-          <span className="material-symbols-outlined" style={isActive('/') ? { fontVariationSettings: "'FILL' 1" } : {}}>home</span>
+        <Link to="/home" className={isActive('/home') ? activeStyle : inactiveStyle}>
+          <span className="material-symbols-outlined" style={isActive('/home') ? { fontVariationSettings: "'FILL' 1" } : {}}>home</span>
           <span className="text-[10px] font-extrabold mt-1">Home</span>
         </Link>
 

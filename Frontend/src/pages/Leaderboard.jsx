@@ -5,8 +5,6 @@ import TopAppBar from '../components/TopAppBar';
 
 export default function Leaderboard() {
   const { user } = useAuth();
-  // Tab state
-  const [activeTab, setActiveTab] = useState('all');
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,13 +27,10 @@ export default function Leaderboard() {
     return <div className="pt-24 text-center">Loading leaderboard...</div>;
   }
 
-  // Display data based on active tab (currently API only has all-time, so we'll mock weekly by slicing if needed, but for now we'll just show all)
-  const displayLeaderboard = activeTab === 'weekly' ? leaderboard.slice(0, 5) : leaderboard;
-
   // Top 3 users
-  const topUsers = displayLeaderboard.slice(0, 3);
+  const topUsers = leaderboard.slice(0, 3);
   // Remaining users
-  const remainingUsers = displayLeaderboard.slice(3);
+  const remainingUsers = leaderboard.slice(3);
 
   // Current user entry
   const currentUserEntry = user ? leaderboard.find(u => u.id === user.id) : null;
