@@ -49,28 +49,6 @@ export default function Leaderboard() {
        
         <div className="mb-10 text-center">
           <h2 className="font-headline text-4xl font-extrabold text-on-background tracking-tight mb-6">Leaderboard</h2>
-          <div className="inline-flex p-1.5 bg-surface-container rounded-2xl shadow-inner">
-            <button
-              onClick={() => setActiveTab('weekly')}
-              className={`px-8 py-2.5 rounded-xl font-headline font-bold text-sm transition-colors ${
-                activeTab === 'weekly'
-                  ? 'bg-surface-container-lowest text-primary shadow-[0_2px_0_0_#2e730020]'
-                  : 'text-on-surface-variant hover:bg-surface-container-high'
-              }`}
-            >
-              Weekly
-            </button>
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-8 py-2.5 rounded-xl font-headline font-bold text-sm transition-colors ${
-                activeTab === 'all'
-                  ? 'bg-surface-container-lowest text-primary shadow-[0_2px_0_0_#2e730020]'
-                  : 'text-on-surface-variant hover:bg-surface-container-high'
-              }`}
-            >
-              All Time
-            </button>
-          </div>
         </div>
 
        

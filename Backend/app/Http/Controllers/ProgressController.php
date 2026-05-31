@@ -68,9 +68,18 @@ class ProgressController extends Controller
         $user = $request->user();
         $quiz = Quiz::with('questions.options')->findOrFail($request->quiz_id);
 
-        // Evaluate answers
+        // Evaluate answers and award XP per newly-correct question
         $totalQuestions = $quiz->questions->count();
         $correctCount   = 0;
+        $xpEarned       = 0;
+
+        // Load existing progress to get previously correct question IDs
+        $progress = UserQuizProgress::where('user_id', $user->id)
+            ->where('quiz_id', $quiz->id)
+            ->first();
+
+        $alreadyCorrectIds = $progress ? ($progress->correct_question_ids ?? []) : [];
+        $newCorrectIds = $alreadyCorrectIds; // Start with existing, will merge new ones
 
         foreach ($quiz->questions as $question) {
             $selectedOptionId = $request->answers[$question->id] ?? null;
@@ -83,27 +92,46 @@ class ProgressController extends Controller
 
                 if ($isCorrect) {
                     $correctCount++;
+
+                    // Only award 10 XP if this question wasn't already correct
+                    if (!in_array($question->id, $alreadyCorrectIds)) {
+                        $xpEarned += 10;
+                        $newCorrectIds[] = $question->id;
+                    }
                 }
             }
         }
 
         // Calculate score (0-100)
-        $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100) : 0;
+        $score = $totalQuestions > 0 ? (int) round(($correctCount / $totalQuestions) * 100) : 0;
 
-        // Update or create quiz progress
-        $progress = UserQuizProgress::updateOrCreate(
-            ['user_id' => $user->id, 'quiz_id' => $quiz->id],
-            [
-                'best_score' => \DB::raw("GREATEST(best_score, {$score})"),
-                'attempts'   => \DB::raw('attempts + 1'),
-            ]
-        );
+        // Perfect score bonus: +10 XP (only awarded the first time they get 100%)
+        $previousBestScore = $progress ? $progress->best_score : 0;
+        $perfectScoreBonus = false;
+        if ($score === 100 && $previousBestScore < 100) {
+            $xpEarned += 10;
+            $perfectScoreBonus = true;
+        }
 
-        // Award XP based on score (only if score >= 60)
-        $xpEarned = 0;
-        if ($score >= 60) {
-            $xpEarned = intval($quiz->xp_reward * ($score / 100));
+        // Award earned XP
+        if ($xpEarned > 0) {
             $user->increment('total_xp', $xpEarned);
+        }
+
+        // Update or create quiz progress with correct_question_ids
+        if ($progress) {
+            $progress->best_score = max($progress->best_score, $score);
+            $progress->attempts   = $progress->attempts + 1;
+            $progress->correct_question_ids = array_values(array_unique($newCorrectIds));
+            $progress->save();
+        } else {
+            $progress = UserQuizProgress::create([
+                'user_id'              => $user->id,
+                'quiz_id'              => $quiz->id,
+                'best_score'           => $score,
+                'attempts'             => 1,
+                'correct_question_ids' => array_values(array_unique($newCorrectIds)),
+            ]);
         }
 
         // Reload to get actual best_score
@@ -113,12 +141,13 @@ class ProgressController extends Controller
         $this->checkAchievements($user);
 
         return $this->success([
-            'score'          => $score,
-            'correct'        => $correctCount,
-            'total'          => $totalQuestions,
-            'xp_earned'      => $xpEarned,
-            'best_score'     => $progress->best_score,
-            'total_xp'       => $user->fresh()->total_xp,
+            'score'               => $score,
+            'correct'             => $correctCount,
+            'total'               => $totalQuestions,
+            'xp_earned'           => $xpEarned,
+            'perfect_score_bonus' => $perfectScoreBonus,
+            'best_score'          => $progress->best_score,
+            'total_xp'            => $user->fresh()->total_xp,
         ], 'Quiz submitted');
     }
 
@@ -194,7 +223,7 @@ class ProgressController extends Controller
             ->get()
             ->keyBy('quiz_id');
 
-        $result = $topics->map(function ($topic) use ($completedMaterialIds, $quizProgress) {
+        $result = $topics->map(function ($topic) use ($user, $completedMaterialIds, $quizProgress) {
             $totalMaterials = $topic->materials->count();
             $totalQuizzes = $topic->quizzes->count();
             $totalItems = $totalMaterials + $totalQuizzes;
@@ -211,6 +240,18 @@ class ProgressController extends Controller
             $completedItems = $completedMaterials + $completedQuizzes;
             $progressPct = $totalItems > 0 ? round(($completedItems / $totalItems) * 100) : 0;
 
+            // Find the latest interaction time for this topic
+            $latestMaterialAccess = \App\Models\UserMaterialProgress::where('user_id', $user->id)
+                ->whereIn('material_id', $topic->materials->pluck('id'))
+                ->max('updated_at');
+
+            $latestQuizAccess = \App\Models\UserQuizProgress::where('user_id', $user->id)
+                ->whereIn('quiz_id', $topic->quizzes->pluck('id'))
+                ->max('updated_at');
+
+            $dates = array_filter([$latestMaterialAccess, $latestQuizAccess]);
+            $lastAccessedAt = empty($dates) ? null : max($dates);
+
             return [
                 'topic_id'            => $topic->id,
                 'slug'                => $topic->slug,
@@ -220,6 +261,7 @@ class ProgressController extends Controller
                 'completed_materials' => $completedMaterials,
                 'completed_quizzes'   => $completedQuizzes,
                 'progress_pct'        => $progressPct,
+                'last_accessed_at'    => $lastAccessedAt,
             ];
         });
 

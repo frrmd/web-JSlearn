@@ -13,182 +13,235 @@ class QuizSeeder extends Seeder
     public function run(): void
     {
         $quizData = [
-            'js-basics' => [
+            // ═══════════════════════════════════════════════════
+            // TOPIC 1 — Introduction to JavaScript
+            // ═══════════════════════════════════════════════════
+            'intro-to-js' => [
                 [
                     'title' => 'Quiz Level 1', 'xp_reward' => 30,
                     'questions' => [
-                        ['text' => 'What is the output of typeof []?', 'order' => 1, 'options' => [
-                            ['"Object"', true], ['"Array"', false], ['"String"', false], ['"Undefined"', false],
+                        ['text' => 'Who created JavaScript?', 'order' => 1, 'options' => [
+                            ['Brendan Eich', true], ['Tim Berners-Lee', false], ['James Gosling', false], ['Guido van Rossum', false],
                         ]],
-                        ['text' => 'Which keyword is used to declare a block-scoped variable?', 'order' => 2, 'options' => [
-                            ['var', false], ['let', true], ['function', false], ['global', false],
+                        ['text' => 'In what year was JavaScript created?', 'order' => 2, 'options' => [
+                            ['2001', false], ['1995', true], ['1989', false], ['2010', false],
                         ]],
-                        ['text' => 'What is the assignment operator in JavaScript?', 'order' => 3, 'options' => [
-                            ['==', false], ['===', false], ['=', true], ['=>', false],
+                        ['text' => 'JavaScript is an interpreted language. What does that mean?', 'order' => 3, 'options' => [
+                            ['Code is executed line by line without a separate compilation step', true],
+                            ['Code must be compiled before running', false],
+                            ['It only runs on servers', false],
+                            ['It cannot interact with HTML', false],
                         ]],
                     ],
                 ],
                 [
                     'title' => 'Quiz Level 2', 'xp_reward' => 35,
                     'questions' => [
-                        ['text' => 'Which of the following is a primitive data type in JavaScript?', 'order' => 1, 'options' => [
-                            ['Object', false], ['Array', false], ['String', true], ['Function', false],
+                        ['text' => 'Which of the following is a place where JavaScript can run?', 'order' => 1, 'options' => [
+                            ['Only in the browser', false], ['Only on the server', false], ['Both in the browser and on the server (Node.js)', true], ['Only in mobile apps', false],
                         ]],
-                        ['text' => 'What will be the output of console.log(1 + "1")?', 'order' => 2, 'options' => [
-                            ['2', false], ['"11"', true], ['NaN', false], ['Error', false],
+                        ['text' => 'What function is used to print output to the console?', 'order' => 2, 'options' => [
+                            ['print()', false], ['echo()', false], ['console.log()', true], ['System.out.println()', false],
                         ]],
-                        ['text' => 'How do you define a constant variable?', 'order' => 3, 'options' => [
-                            ['let', false], ['const', true], ['var', false], ['static', false],
+                        ['text' => 'What is ECMAScript?', 'order' => 3, 'options' => [
+                            ['A JavaScript framework', false], ['The official specification that JavaScript implements', true], ['A web browser', false], ['A JavaScript library', false],
                         ]],
-                    ],
-                ],
-            ],
-            'loops-arrays' => [
-                [
-                    'title' => 'Quiz Level 1', 'xp_reward' => 35,
-                    'questions' => [
-                        ['text' => 'Which array method adds one or more elements to the end of an array?', 'order' => 1, 'options' => [
-                            ['push()', true], ['pop()', false], ['shift()', false], ['unshift()', false],
-                        ]],
-                        ['text' => 'How do you access the first element of an array named arr?', 'order' => 2, 'options' => [
-                            ['arr[1]', false], ['arr.first()', false], ['arr[0]', true], ['arr.get(0)', false],
-                        ]],
-                        ['text' => 'Which method removes the last element from an array?', 'order' => 3, 'options' => [
-                            ['pop()', true], ['push()', false], ['shift()', false], ['splice()', false],
-                        ]],
-                    ],
-                ],
-                [
-                    'title' => 'Quiz Level 2', 'xp_reward' => 40,
-                    'questions' => [
-                        ['text' => 'Which of the following is the correct syntax for a for loop?', 'order' => 1, 'options' => [
-                            ['for (i = 0; i < 5; i++)', true], ['for i = 1 to 5', false], ['for (i <= 5; i++)', false], ['loop (i=0; i<5)', false],
-                        ]],
-                        ['text' => 'Which array method creates a new array with the results of calling a provided function on every element?', 'order' => 2, 'options' => [
-                            ['forEach()', false], ['map()', true], ['filter()', false], ['reduce()', false],
-                        ]],
-                        ['text' => 'How do you find the total number of elements in an array named arr?', 'order' => 3, 'options' => [
-                            ['arr.size', false], ['arr.length', true], ['arr.count()', false], ['length(arr)', false],
+                        ['text' => 'Which HTML tag is used to include JavaScript in a web page?', 'order' => 4, 'options' => [
+                            ['<javascript>', false], ['<js>', false], ['<script>', true], ['<code>', false],
                         ]],
                     ],
                 ],
             ],
-            'dom-manipulation' => [
-                [
-                    'title' => 'Quiz Level 1', 'xp_reward' => 35,
-                    'questions' => [
-                        ['text' => 'Which method selects the first element that matches a CSS selector?', 'order' => 1, 'options' => [
-                            ['getElementById', false], ['querySelector', true], ['querySelectorAll', false], ['getElementsByClassName', false],
-                        ]],
-                        ['text' => 'How do you change the text content of an HTML element?', 'order' => 2, 'options' => [
-                            ['element.text = "..."', false], ['element.textContent = "..."', true], ['element.innerHTML = "..."', false], ['Both B and C', false],
-                        ]],
-                        ['text' => 'What object represents the entire HTML document?', 'order' => 3, 'options' => [
-                            ['window', false], ['document', true], ['body', false], ['dom', false],
-                        ]],
-                    ],
-                ],
-                [
-                    'title' => 'Quiz Level 2', 'xp_reward' => 40,
-                    'questions' => [
-                        ['text' => 'How do you attach an event listener to an element?', 'order' => 1, 'options' => [
-                            ['element.attachEvent()', false], ['element.listenEvent()', false], ['element.addEventListener()', true], ['element.on()', false],
-                        ]],
-                        ['text' => 'How do you change the background color of an element in JavaScript?', 'order' => 2, 'options' => [
-                            ['element.style.backgroundColor = "red"', true], ['element.bgColor = "red"', false], ['element.css("background-color", "red")', false], ['element.style.background-color = "red"', false],
-                        ]],
-                        ['text' => 'Which method creates a new HTML element?', 'order' => 3, 'options' => [
-                            ['document.createElement()', true], ['document.makeElement()', false], ['document.addNode()', false], ['document.createNode()', false],
-                        ]],
-                    ],
-                ],
-            ],
-            'async-fetch' => [
+
+            // ═══════════════════════════════════════════════════
+            // TOPIC 2 — Variables & Data Types
+            // ═══════════════════════════════════════════════════
+            'variables-data-types' => [
                 [
                     'title' => 'Quiz Level 1', 'xp_reward' => 30,
                     'questions' => [
-                        ['text' => 'What is a Promise in JavaScript?', 'order' => 1, 'options' => [
-                            ['A guarantee of synchronous execution', false], ['An object representing the eventual completion or failure of an async operation', true], ['A specific type of function', false], ['A library for fetching data', false],
+                        ['text' => 'Which keyword declares a variable that cannot be reassigned?', 'order' => 1, 'options' => [
+                            ['let', false], ['var', false], ['const', true], ['static', false],
                         ]],
-                        ['text' => 'Which keywords are used to handle promises cleanly?', 'order' => 2, 'options' => [
-                            ['try / catch', false], ['async / await', true], ['then / catch', false], ['Both B and C', false],
+                        ['text' => 'What is the value of a declared but unassigned variable?', 'order' => 2, 'options' => [
+                            ['null', false], ['0', false], ['""', false], ['undefined', true],
                         ]],
-                        ['text' => 'What method is called on a Promise when it is successfully resolved?', 'order' => 3, 'options' => [
-                            ['.catch()', false], ['.finally()', false], ['.done()', false], ['.then()', true],
+                        ['text' => 'Which keyword is recommended for variables that will change value?', 'order' => 3, 'options' => [
+                            ['const', false], ['let', true], ['var', false], ['define', false],
                         ]],
                     ],
                 ],
                 [
-                    'title' => 'Quiz Level 2', 'xp_reward' => 40,
+                    'title' => 'Quiz Level 2', 'xp_reward' => 35,
                     'questions' => [
-                        ['text' => 'What does the fetch() API return?', 'order' => 1, 'options' => [
-                            ['JSON data', false], ['A Promise', true], ['An XML object', false], ['A string', false],
+                        ['text' => 'What is the typeof "Hello"?', 'order' => 1, 'options' => [
+                            ['"text"', false], ['"string"', true], ['"char"', false], ['"word"', false],
                         ]],
-                        ['text' => 'How do you extract JSON data from a fetch response?', 'order' => 2, 'options' => [
-                            ['response.parse()', false], ['response.data', false], ['response.json()', true], ['JSON.parse(response)', false],
+                        ['text' => 'Which of the following is NOT a primitive data type in JavaScript?', 'order' => 2, 'options' => [
+                            ['String', false], ['Boolean', false], ['Array', true], ['Number', false],
                         ]],
-                        ['text' => 'What is the default HTTP method used by fetch()?', 'order' => 3, 'options' => [
-                            ['POST', false], ['PUT', false], ['GET', true], ['OPTIONS', false],
+                        ['text' => 'What does null represent in JavaScript?', 'order' => 3, 'options' => [
+                            ['An error', false], ['An empty string', false], ['The intentional absence of a value', true], ['The number zero', false],
+                        ]],
+                        ['text' => 'What is the output of typeof 42?', 'order' => 4, 'options' => [
+                            ['"integer"', false], ['"number"', true], ['"float"', false], ['"digit"', false],
                         ]],
                     ],
                 ],
             ],
-            'react-hooks' => [
-                [
-                    'title' => 'Quiz Level 1', 'xp_reward' => 40,
-                    'questions' => [
-                        ['text' => 'What does the useState hook return?', 'order' => 1, 'options' => [
-                            ['The current state and a function to update it', true], ['Only the state value', false], ['A boolean indicating if state changed', false], ['A configuration object', false],
-                        ]],
-                        ['text' => 'Can you use React Hooks inside a standard class component?', 'order' => 2, 'options' => [
-                            ['Yes', false], ['No', true], ['Only in the constructor', false], ['Only useEffect', false],
-                        ]],
-                        ['text' => 'Where must Hooks be called in a functional component?', 'order' => 3, 'options' => [
-                            ['Inside loops', false], ['Inside conditional statements', false], ['At the top level', true], ['Anywhere', false],
-                        ]],
-                    ],
-                ],
-                [
-                    'title' => 'Quiz Level 2', 'xp_reward' => 40,
-                    'questions' => [
-                        ['text' => 'What is the purpose of the dependency array in useEffect?', 'order' => 1, 'options' => [
-                            ['To store local variables', false], ['To define when the effect should re-run', true], ['To pass props down', false], ['To prevent memory leaks directly', false],
-                        ]],
-                        ['text' => 'What happens if you omit the dependency array in useEffect entirely?', 'order' => 2, 'options' => [
-                            ['It runs only once on mount', false], ['It throws an error', false], ['It runs after every single render', true], ['It never runs', false],
-                        ]],
-                        ['text' => 'How do you clean up side effects in useEffect?', 'order' => 3, 'options' => [
-                            ['By calling a cleanup function manually', false], ['By returning a cleanup function from the effect', true], ['React cleans them up automatically', false], ['By throwing an error', false],
-                        ]],
-                    ],
-                ],
-            ],
-            'nodejs-express' => [
+
+            // ═══════════════════════════════════════════════════
+            // TOPIC 3 — Operators & Conditions
+            // ═══════════════════════════════════════════════════
+            'operators-conditions' => [
                 [
                     'title' => 'Quiz Level 1', 'xp_reward' => 30,
                     'questions' => [
-                        ['text' => 'What is Node.js?', 'order' => 1, 'options' => [
-                            ['A JavaScript framework', false], ['A JavaScript runtime environment', true], ['A database', false], ['A front-end library', false],
+                        ['text' => 'What is the result of 10 % 3?', 'order' => 1, 'options' => [
+                            ['3', false], ['1', true], ['0', false], ['10', false],
                         ]],
-                        ['text' => 'What is Express.js?', 'order' => 2, 'options' => [
-                            ['A database for Node.js', false], ['A minimal and flexible Node.js web application framework', true], ['A testing utility', false], ['A task runner', false],
+                        ['text' => 'What does the === operator check?', 'order' => 2, 'options' => [
+                            ['Only value', false], ['Only type', false], ['Both value and type', true], ['Neither', false],
                         ]],
-                        ['text' => 'How do you initialize a new npm project?', 'order' => 3, 'options' => [
-                            ['npm create', false], ['npm start', false], ['npm init', true], ['node init', false],
+                        ['text' => 'What is the result of true && false?', 'order' => 3, 'options' => [
+                            ['true', false], ['false', true], ['null', false], ['undefined', false],
                         ]],
                     ],
                 ],
                 [
-                    'title' => 'Quiz Level 2', 'xp_reward' => 40,
+                    'title' => 'Quiz Level 2', 'xp_reward' => 35,
                     'questions' => [
-                        ['text' => 'What is middleware in Express?', 'order' => 1, 'options' => [
-                            ['Functions that have access to the request object, response object, and the next middleware', true], ['The core database engine', false], ['A tool for writing CSS', false], ['A front-end templating engine', false],
+                        ['text' => 'Which statement is used to test multiple conditions in sequence?', 'order' => 1, 'options' => [
+                            ['for', false], ['while', false], ['if...else if...else', true], ['switch only', false],
                         ]],
-                        ['text' => 'Which method is used to define a route for GET requests in Express?', 'order' => 2, 'options' => [
-                            ['app.post()', false], ['app.route()', false], ['app.get()', true], ['app.fetch()', false],
+                        ['text' => 'What keyword ends each case in a switch statement to prevent fall-through?', 'order' => 2, 'options' => [
+                            ['stop', false], ['exit', false], ['break', true], ['end', false],
                         ]],
-                        ['text' => 'How do you send a JSON response in Express?', 'order' => 3, 'options' => [
-                            ['res.sendJSON()', false], ['res.json()', true], ['res.send()', false], ['res.respond()', false],
+                        ['text' => 'What is the output of: 5 == "5"?', 'order' => 3, 'options' => [
+                            ['true', true], ['false', false], ['undefined', false], ['Error', false],
+                        ]],
+                        ['text' => 'Which logical operator means "OR"?', 'order' => 4, 'options' => [
+                            ['&&', false], ['||', true], ['!', false], ['??', false],
+                        ]],
+                    ],
+                ],
+            ],
+
+            // ═══════════════════════════════════════════════════
+            // TOPIC 4 — Loops
+            // ═══════════════════════════════════════════════════
+            'loops' => [
+                [
+                    'title' => 'Quiz Level 1', 'xp_reward' => 30,
+                    'questions' => [
+                        ['text' => 'How many times does this loop run: for (let i = 0; i < 3; i++) { }?', 'order' => 1, 'options' => [
+                            ['2', false], ['3', true], ['4', false], ['Infinite', false],
+                        ]],
+                        ['text' => 'Which loop always executes at least once?', 'order' => 2, 'options' => [
+                            ['for', false], ['while', false], ['do...while', true], ['for...in', false],
+                        ]],
+                        ['text' => 'What happens if a while loop condition is always true?', 'order' => 3, 'options' => [
+                            ['It runs once', false], ['It throws an error', false], ['It creates an infinite loop', true], ['It skips the loop', false],
+                        ]],
+                    ],
+                ],
+                [
+                    'title' => 'Quiz Level 2', 'xp_reward' => 35,
+                    'questions' => [
+                        ['text' => 'What does the break statement do inside a loop?', 'order' => 1, 'options' => [
+                            ['Skips the current iteration', false], ['Stops the loop entirely', true], ['Restarts the loop', false], ['Pauses the loop', false],
+                        ]],
+                        ['text' => 'What does the continue statement do inside a loop?', 'order' => 2, 'options' => [
+                            ['Stops the loop entirely', false], ['Skips the current iteration and moves to the next', true], ['Restarts the loop from the beginning', false], ['Throws an error', false],
+                        ]],
+                        ['text' => 'Which loop is best when you know exactly how many times to repeat?', 'order' => 3, 'options' => [
+                            ['while', false], ['do...while', false], ['for', true], ['switch', false],
+                        ]],
+                        ['text' => 'What is the output of this code?\nfor (let i = 1; i <= 5; i++) {\n  if (i === 3) continue;\n  console.log(i);\n}', 'order' => 4, 'options' => [
+                            ['1, 2, 3, 4, 5', false], ['1, 2, 4, 5', true], ['1, 2', false], ['3, 4, 5', false],
+                        ]],
+                    ],
+                ],
+            ],
+
+            // ═══════════════════════════════════════════════════
+            // TOPIC 5 — Functions
+            // ═══════════════════════════════════════════════════
+            'functions' => [
+                [
+                    'title' => 'Quiz Level 1', 'xp_reward' => 30,
+                    'questions' => [
+                        ['text' => 'Which keyword is used to define a function in JavaScript?', 'order' => 1, 'options' => [
+                            ['def', false], ['func', false], ['function', true], ['method', false],
+                        ]],
+                        ['text' => 'What is a parameter in a function?', 'order' => 2, 'options' => [
+                            ['A value passed to the function when calling it', false],
+                            ['A variable listed in the function definition', true],
+                            ['The return value of the function', false],
+                            ['The name of the function', false],
+                        ]],
+                        ['text' => 'What does this function return?\nfunction add(a, b) { return a + b; }\nadd(2, 3);', 'order' => 3, 'options' => [
+                            ['23', false], ['5', true], ['undefined', false], ['Error', false],
+                        ]],
+                    ],
+                ],
+                [
+                    'title' => 'Quiz Level 2', 'xp_reward' => 35,
+                    'questions' => [
+                        ['text' => 'What is the correct syntax for an arrow function?', 'order' => 1, 'options' => [
+                            ['const fn = (a, b) => { return a + b; }', true],
+                            ['const fn = function => (a, b) { return a + b; }', false],
+                            ['const fn = arrow(a, b) { return a + b; }', false],
+                            ['const fn = (a, b) -> { return a + b; }', false],
+                        ]],
+                        ['text' => 'What happens when a function hits a return statement?', 'order' => 2, 'options' => [
+                            ['It continues executing the rest of the function', false],
+                            ['It immediately exits the function and sends back the value', true],
+                            ['It throws an error', false],
+                            ['It pauses the function', false],
+                        ]],
+                        ['text' => 'What is the output?\nconst double = (n) => n * 2;\nconsole.log(double(4));', 'order' => 3, 'options' => [
+                            ['4', false], ['6', false], ['8', true], ['undefined', false],
+                        ]],
+                        ['text' => 'What value is used when a default parameter is not provided?', 'order' => 4, 'options' => [
+                            ['null', false], ['0', false], ['The default value defined in the function', true], ['An error is thrown', false],
+                        ]],
+                    ],
+                ],
+            ],
+
+            // ═══════════════════════════════════════════════════
+            // TOPIC 6 — Arrays & Objects
+            // ═══════════════════════════════════════════════════
+            'arrays-objects' => [
+                [
+                    'title' => 'Quiz Level 1', 'xp_reward' => 30,
+                    'questions' => [
+                        ['text' => 'What is the index of the first element in a JavaScript array?', 'order' => 1, 'options' => [
+                            ['1', false], ['0', true], ['-1', false], ['first', false],
+                        ]],
+                        ['text' => 'Which method adds an element to the end of an array?', 'order' => 2, 'options' => [
+                            ['pop()', false], ['push()', true], ['shift()', false], ['unshift()', false],
+                        ]],
+                        ['text' => 'How do you find the number of elements in an array called arr?', 'order' => 3, 'options' => [
+                            ['arr.size', false], ['arr.count()', false], ['arr.length', true], ['len(arr)', false],
+                        ]],
+                    ],
+                ],
+                [
+                    'title' => 'Quiz Level 2', 'xp_reward' => 35,
+                    'questions' => [
+                        ['text' => 'How do you access the "name" property of an object called user?', 'order' => 1, 'options' => [
+                            ['user.name', true], ['user[0]', false], ['user->name', false], ['user::name', false],
+                        ]],
+                        ['text' => 'Which notation should you use when a property name is stored in a variable?', 'order' => 2, 'options' => [
+                            ['Dot notation', false], ['Bracket notation', true], ['Arrow notation', false], ['Colon notation', false],
+                        ]],
+                        ['text' => 'What is a method in a JavaScript object?', 'order' => 3, 'options' => [
+                            ['A number stored in the object', false], ['A function stored as an object property', true], ['A special type of array', false], ['An object key', false],
+                        ]],
+                        ['text' => 'What does this code output?\nconst arr = ["a", "b", "c"];\nconsole.log(arr[1]);', 'order' => 4, 'options' => [
+                            ['"a"', false], ['"b"', true], ['"c"', false], ['undefined', false],
                         ]],
                     ],
                 ],

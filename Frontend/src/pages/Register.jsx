@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -30,8 +31,16 @@ export default function Register() {
       return;
     }
 
-    if (password.length < 6) {
-      setErrorMessage('Password harus minimal 6 karakter.');
+    const isStrongPassword = (pass) => {
+      return pass.length >= 8 && 
+             /[A-Z]/.test(pass) && 
+             /[a-z]/.test(pass) && 
+             /[0-9]/.test(pass) && 
+             /[^A-Za-z0-9]/.test(pass);
+    };
+
+    if (!isStrongPassword(password)) {
+      setErrorMessage('Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.');
       return;
     }
 
@@ -142,6 +151,7 @@ export default function Register() {
                 placeholder="••••••••" 
               />
             </div>
+            <PasswordStrengthIndicator password={password} />
           </div>
 
           {/* Confirm Password */}

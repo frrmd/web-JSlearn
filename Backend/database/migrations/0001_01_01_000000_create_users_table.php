@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('username')->unique()->nullable();
             $table->string('email')->unique();
             $table->string('avatar_url')->nullable();
+            $table->text('bio')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('total_xp')->default(0);

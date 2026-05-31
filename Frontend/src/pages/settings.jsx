@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 const AVATAR_OPTIONS = [
   'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
@@ -25,6 +26,7 @@ export default function Settings() {
   const [password, setPassword] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [saved, setSaved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Avatar Modal State
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -42,6 +44,7 @@ export default function Settings() {
   }, [user]);
 
   const handleSaveAccount = async () => {
+    setErrorMessage('');
     try {
       const payload = {
         username,
@@ -50,6 +53,19 @@ export default function Settings() {
       };
 
       if (password) {
+        const isStrongPassword = (pass) => {
+          return pass.length >= 8 && 
+                 /[A-Z]/.test(pass) && 
+                 /[a-z]/.test(pass) && 
+                 /[0-9]/.test(pass) && 
+                 /[^A-Za-z0-9]/.test(pass);
+        };
+
+        if (!isStrongPassword(password)) {
+          setErrorMessage('Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.');
+          return;
+        }
+
         payload.password = password;
         payload.password_confirmation = password;
       }
@@ -62,7 +78,7 @@ export default function Settings() {
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
       console.error('Failed to update profile', error);
-      alert(error.response?.data?.message || 'Failed to update profile');
+      setErrorMessage(error.response?.data?.message || 'Failed to update profile');
     }
   };
 
@@ -134,6 +150,11 @@ export default function Settings() {
             Account
           </h2>
           <div className="bg-surface-container rounded-lg p-6 space-y-5 relative overflow-hidden">
+            {errorMessage && (
+              <div className="p-3 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold rounded text-sm mb-2">
+                {errorMessage}
+              </div>
+            )}
 
             {/* Username */}
             <div className="space-y-2">
@@ -195,6 +216,7 @@ export default function Settings() {
                   placeholder="Leave blank to keep current"
                 />
               </div>
+              <PasswordStrengthIndicator password={password} />
             </div>
 
             {/* Save Button */}

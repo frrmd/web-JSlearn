@@ -73,16 +73,17 @@ export default function MaterialContent() {
       <Sidebar />
       <FocusModeToggle />
 
-      <main className={`pt-28 px-6 max-w-4xl md:px-12 space-y-10 transition-all duration-300 ease-out ${focusMode ? 'mx-auto' : 'md:ml-64 mx-auto'}`}>
-        <button
-          onClick={() => navigate(`/topic/${topicId}`)}
-          className="flex items-center gap-2 text-on-surface-variant font-bold font-headline hover:text-primary transition-colors"
-        >
-          <span className="material-symbols-outlined">arrow_back</span>
-          Back to Topic
-        </button>
+      <main className={`transition-all duration-300 ease-out ${focusMode ? '' : 'md:ml-64'}`}>
+        <div className="pt-28 px-6 max-w-4xl mx-auto md:px-12 space-y-10">
+          <button
+            onClick={() => navigate(`/topic/${topicId}`)}
+            className="flex items-center gap-2 text-on-surface-variant font-bold font-headline hover:text-primary transition-colors"
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+            Back to Topic
+          </button>
 
-        <article className="bg-surface-container-lowest p-8 md:p-12 rounded-3xl border-2 border-outline-variant/20 shadow-sm">
+          <article className="bg-surface-container-lowest p-8 md:p-12 rounded-3xl border-2 border-outline-variant/20 shadow-sm">
           <header className="mb-10">
             <h1 className="text-4xl md:text-5xl font-black font-headline text-on-surface leading-tight mb-4 flex items-center gap-4 flex-wrap">
               {material.title}
@@ -112,6 +113,7 @@ export default function MaterialContent() {
             {isCompleted ? 'Continue' : 'Mark as Complete'}
             <span className="material-symbols-outlined">arrow_forward</span>
           </button>
+        </div>
         </div>
       </main>
     </div>

@@ -10,12 +10,12 @@ class TopicSeeder extends Seeder
     public function run(): void
     {
         $topics = [
-            ['title' => 'JS Basics',          'slug' => 'js-basics',          'description' => 'Learn the core syntax and language fundamentals of JavaScript.',      'order' => 1],
-            ['title' => 'Loops & Arrays',      'slug' => 'loops-arrays',       'description' => 'Master arrays, loops, and modern iteration methods.',                 'order' => 2],
-            ['title' => 'DOM Manipulation',    'slug' => 'dom-manipulation',   'description' => 'Learn how to query, modify, and interact with the Document Object Model.', 'order' => 3],
-            ['title' => 'Async & Fetch',       'slug' => 'async-fetch',        'description' => 'Understand Promises, async/await, and the Fetch API.',                'order' => 4],
-            ['title' => 'React Hooks',         'slug' => 'react-hooks',        'description' => 'The foundation of modern React: useState, useEffect, and more.',      'order' => 5],
-            ['title' => 'Node.js Express',     'slug' => 'nodejs-express',     'description' => 'Build server-side applications with Node.js and Express.',            'order' => 6],
+            ['title' => 'Introduction to JavaScript', 'slug' => 'intro-to-js',          'description' => 'Discover what JavaScript is, its history, and where it runs.',                       'order' => 1],
+            ['title' => 'Variables & Data Types',     'slug' => 'variables-data-types',  'description' => 'Learn how to store data using let, const, and var, and explore primitive data types.', 'order' => 2],
+            ['title' => 'Operators & Conditions',     'slug' => 'operators-conditions',  'description' => 'Master arithmetic, comparison, and logical operators along with conditional statements.', 'order' => 3],
+            ['title' => 'Loops',                      'slug' => 'loops',                 'description' => 'Repeat actions efficiently with for, while, and do-while loops.',                     'order' => 4],
+            ['title' => 'Functions',                   'slug' => 'functions',             'description' => 'Organize your code into reusable blocks with function declarations and arrow functions.', 'order' => 5],
+            ['title' => 'Arrays & Objects',            'slug' => 'arrays-objects',        'description' => 'Work with collections of data using arrays and objects.',                             'order' => 6],
         ];
 
         foreach ($topics as $t) {

@@ -35,7 +35,7 @@ export default function Landing() {
             </div>
             <div className="hidden lg:flex flex-col items-end text-right">
               <h2 className="font-headline font-extrabold text-4xl text-on-surface leading-tight tracking-tight">
-                JS <span className="text-primary italic">Mastery</span>
+                JS<span className="text-primary italic">LEARN</span>
               </h2>
               <p className="text-on-surface-variant max-w-xs mt-2 font-medium">
                 Gamified paths to help you write cleaner code, faster.
@@ -73,26 +73,6 @@ export default function Landing() {
                 I already have an account
               </button>
             </div>
-
-            {/* Social Login Separator */}
-            <div className="flex items-center gap-4 py-4">
-              <div className="h-[2px] flex-grow bg-surface-container-high rounded-full"></div>
-              <span className="text-outline font-headline font-bold text-xs uppercase tracking-widest">or sign in with</span>
-              <div className="h-[2px] flex-grow bg-surface-container-high rounded-full"></div>
-            </div>
-
-            {/* Social Icons Grid */}
-            <div className="flex justify-center lg:justify-start gap-4">
-              <button className="w-14 h-14 rounded-lg bg-surface-container-lowest flex items-center justify-center border-2 border-outline-variant/10 shadow-sm active:scale-90 transition-transform">
-                <img alt="Google" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSIqlG71_krTdS2lQiLsX6-ua0J1x9rNQojyxvAGy6dIILaC5R9AYp5HU3MTSPQ7OU21b8JpQuCh23bu6RviUaUSUmEwCE1yS0gqE6klqMZ7TGXCbWN-ClIZnzEUaTQymaAYyBEq75Wh_5KwKRBa340rRSTYqMjziydTtTiI-qlWMG764iD5407W6GRa2MuEXbgSv3MLQGoWJUUxpgbeBvj9uUbNXxfAOR0WrvctkhFLywDpkanQBcJieD0rHtfwFouHHOy3Z5BA" />
-              </button>
-              <button className="w-14 h-14 rounded-lg bg-surface-container-lowest flex items-center justify-center border-2 border-outline-variant/10 shadow-sm active:scale-90 transition-transform">
-                <img alt="GitHub" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2iEbyJH0bz6Jhoii9j_MxntwzEFOeG6MHhmr5nVZC5u8HEtz8NMAOBoB6ADfYUO46M-rqR7s2VxGHJ6GCnGsCwOl6i4ZLYrR0hjy6xSpvZDHpsSQ5qNIiIjd0GjeNAcMJGyS3YR5YBWBeDkxXmi54W2YkBqHrP75Eo4jIuu1JTR1ElZdbJqvI8xpcd7ZKQFAXFCKS78m3MIhErNw0sSgTbNReQq04PFAw9hN5KOi0eZR1wssoWJjGAsK1oWA0OBh1U8RNus_ipg" />
-              </button>
-              <button className="w-14 h-14 rounded-lg bg-surface-container-lowest flex items-center justify-center border-2 border-outline-variant/10 shadow-sm active:scale-90 transition-transform">
-                <img alt="Apple" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCduj2cDIdcqEBbSOx_wy7seOrYCiQivXdJY3bZBQCpCsGNTou_oDgGcN4wvdhCXwOeOa_1nq3zNXY5rmNVItFq08hbb1DOesemmeCOU0KL0w6Hk1lj2rIilf39Qjd4rJ-z10jf_PtQQ_bGN0KNrb6x5BYL14zWFiaIUaivq9ml-MVrrq1GFD6HD96yIoHDL46vlEiJ2GzkBRBydc1ZIN0ed4cN_MlY_VOnKuUJzJ-OISf1E_rqWxEEkOy1gAj4vv6K1tGvTt2ugg" />
-              </button>
-            </div>
           </div>
         </div>
       </main>
@@ -104,7 +84,7 @@ export default function Landing() {
           <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
           <a className="text-on-surface-variant hover:text-primary font-headline font-bold text-xs uppercase tracking-widest transition-colors" href="#">Privacy Policy</a>
           <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
-          <span className="text-outline font-headline font-bold text-xs uppercase tracking-widest">© 2024 JS Mastery</span>
+          <span className="text-outline font-headline font-bold text-xs uppercase tracking-widest">© 2026 JSLEARN</span>
         </div>
       </footer>
     </div>

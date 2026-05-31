@@ -19,6 +19,7 @@ export default function Quiz() {
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Current question index state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -112,6 +113,8 @@ export default function Quiz() {
       setHasChecked(false);
       setIsCurrentCorrect(false);
     } else {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
       // Submit quiz
       try {
         const response = await api.post('/progress/quiz', {
@@ -124,6 +127,8 @@ export default function Quiz() {
       } catch (error) {
         console.error('Failed to submit quiz', error);
         alert('Failed to submit quiz. Please try again.');
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -136,6 +141,25 @@ export default function Quiz() {
             <span className="material-symbols-outlined text-6xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
           </div>
           <h1 className="font-headline font-black text-4xl mb-4">Quiz Complete!</h1>
+          
+          {quizResult.perfect_score_bonus && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 flex items-center justify-center gap-3 animate-bounce">
+              <span className="material-symbols-outlined text-amber-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+              <span className="font-headline font-black text-sm tracking-wider uppercase">
+                Perfect Score Bonus! +10 XP
+              </span>
+            </div>
+          )}
+
+          {quizResult.score === 100 && !quizResult.perfect_score_bonus && (
+            <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 flex items-center justify-center gap-3">
+              <span className="material-symbols-outlined text-emerald-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+              <span className="font-headline font-bold text-sm tracking-wider uppercase">
+                Perfect 100% Score!
+              </span>
+            </div>
+          )}
+
           <p className="text-xl text-on-surface-variant font-bold mb-2">
             You scored <strong className="text-primary">{quizResult.correct} / {quizResult.total}</strong> correct! ({quizResult.score}%)
           </p>
@@ -268,9 +292,11 @@ export default function Quiz() {
           ) : (
             <button
               onClick={handleNext}
-              className="px-12 py-5 font-headline font-black text-xl rounded-lg border-b-4 transition-all shadow-xl active:scale-95 bg-primary text-on-primary border-primary-dim hover:translate-y-1 hover:border-b-0 shadow-primary/20"
+              disabled={isSubmitting}
+              className={`px-12 py-5 font-headline font-black text-xl rounded-lg border-b-4 transition-all shadow-xl active:scale-95 
+                ${isSubmitting ? 'bg-surface-variant text-on-surface-variant border-surface-container-highest cursor-not-allowed shadow-none' : 'bg-primary text-on-primary border-primary-dim hover:translate-y-1 hover:border-b-0 shadow-primary/20'}`}
             >
-              {currentQuestionIndex < questions.length - 1 ? 'NEXT' : 'FINISH'}
+              {isSubmitting ? 'SUBMITTING...' : (currentQuestionIndex < questions.length - 1 ? 'NEXT' : 'FINISH')}
             </button>
           )}
         </footer>

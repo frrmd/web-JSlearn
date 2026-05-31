@@ -43,8 +43,9 @@ export default function TopicDetail() {
       <Sidebar />
       
       {/* md:ml-64 creates space for the Sidebar on desktop. Sidebar is hidden on mobile. */}
-      <main className="pt-12 px-6 max-w-5xl mx-auto md:ml-64 md:px-12 space-y-10">
-        <header className="mb-8 bg-surface-container-lowest p-8 rounded-3xl border-2 border-outline-variant/20 shadow-sm">
+      <main className="md:ml-64">
+        <div className="pt-12 px-6 max-w-5xl mx-auto md:px-12 space-y-10">
+          <header className="mb-8 bg-surface-container-lowest p-8 rounded-3xl border-2 border-outline-variant/20 shadow-sm">
           <div className="flex items-center gap-4">
             <div className={`w-20 h-20 bg-${colorTheme}-container rounded-[2rem] flex items-center justify-center shadow-inner`}>
               <span className={`material-symbols-outlined text-5xl text-${colorTheme}`} style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
@@ -145,6 +146,7 @@ export default function TopicDetail() {
           </div>
         </section>
 
+        </div>
       </main>
     </div>
   );

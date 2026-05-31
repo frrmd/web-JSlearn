@@ -39,9 +39,21 @@ export default function Profile() {
           const prog = progressData.find(p => p.topic_id === topic.id);
           return {
             ...topic,
-            progressPct: prog ? prog.progress_pct : 0
+            progressPct: prog ? prog.progress_pct : 0,
+            last_accessed_at: prog ? prog.last_accessed_at : null
           };
         });
+
+        coursesProgress.sort((a, b) => {
+          if (b.progressPct !== a.progressPct) {
+            return b.progressPct - a.progressPct;
+          }
+          if (a.last_accessed_at && b.last_accessed_at) {
+            return new Date(b.last_accessed_at) - new Date(a.last_accessed_at);
+          }
+          return 0;
+        });
+
         setTopicsProgress(coursesProgress);
 
       } catch (error) {
@@ -96,10 +108,10 @@ export default function Profile() {
           </div>
 
 
-          <div className="md:col-span-1 bg-tertiary-container rounded-lg p-8 chunky-card flex flex-col justify-between text-on-tertiary-container">
+          <div className="md:col-span-1 bg-[#e8f5e9] rounded-lg p-8 chunky-card flex flex-col justify-between text-[#1b5e20]">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="bg-white/30 p-3 rounded-2xl">
+                <div className="bg-[#4caf50]/20 p-3 rounded-2xl">
                   <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
                 </div>
                 <div>
@@ -108,7 +120,7 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="bg-white/30 p-3 rounded-2xl">
+                <div className="bg-[#4caf50]/20 p-3 rounded-2xl">
                   <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
                 </div>
                 <div>
@@ -117,7 +129,7 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="bg-white/30 p-3 rounded-2xl">
+                <div className="bg-[#4caf50]/20 p-3 rounded-2xl">
                   <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
                 </div>
                 <div>

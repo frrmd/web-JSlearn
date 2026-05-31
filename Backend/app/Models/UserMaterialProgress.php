@@ -9,6 +9,8 @@ class UserMaterialProgress extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_material_progress';
+
     protected $fillable = [
         'user_id',
         'material_id',

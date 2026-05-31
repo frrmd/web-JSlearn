@@ -36,7 +36,13 @@ class OtpController extends Controller
         if ($type === 'registration') {
             $request->validate([
                 'name'     => 'required|string|max:255',
-                'password' => 'required|string|min:6|confirmed',
+                'password' => ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+            ], [
+                'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+                'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+                'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+                'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+                'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
             ]);
 
             // Make sure email isn't already taken
@@ -81,7 +87,13 @@ class OtpController extends Controller
             'email'    => 'required|email',
             'otp'      => 'required|string|size:6',
             'name'     => 'required|string|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         // ── Verify OTP ──────────────────────────────────────────
@@ -152,7 +164,13 @@ class OtpController extends Controller
         $request->validate([
             'email'    => 'required|email',
             'otp'      => 'required|string|size:6',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         // ── Verify OTP ──────────────────────────────────────────

@@ -57,16 +57,29 @@ export default function Home() {
     return {
       ...topic,
       progress: prog ? prog.progress_pct : 0,
+      last_accessed_at: prog ? prog.last_accessed_at : null,
       colorTheme: 'primary',
       icon: 'terminal'
     };
   });
 
-  // Continue Learning: pick the topic with the highest progress that isn't 100%
+  // Continue Learning: pick the most recently accessed incomplete topic, fallback to first incomplete topic
   const inProgressTopics = coursesWithProgress.filter(t => t.progress < 100);
   const continueTopic = inProgressTopics.length > 0
-    ? inProgressTopics.reduce((best, t) => t.progress > best.progress ? t : best, inProgressTopics[0])
+    ? inProgressTopics.reduce((latest, t) => {
+        if (!latest.last_accessed_at) return t;
+        if (!t.last_accessed_at) return latest;
+        return new Date(t.last_accessed_at) > new Date(latest.last_accessed_at) ? t : latest;
+      }, inProgressTopics[0])
     : null;
+
+  // Recent Topics: sort by last_accessed_at descending, fallback to original order
+  const recentTopics = [...coursesWithProgress].sort((a, b) => {
+    if (!a.last_accessed_at && !b.last_accessed_at) return 0;
+    if (!a.last_accessed_at) return 1;
+    if (!b.last_accessed_at) return -1;
+    return new Date(b.last_accessed_at) - new Date(a.last_accessed_at);
+  }).slice(0, 4);
 
   return (
 
@@ -126,11 +139,11 @@ export default function Home() {
                 <div className="inline-flex items-center justify-center w-24 h-24 bg-[#e8f5e9] text-[#1b5e20] rounded-full mb-2 border-4 border-[#4caf50]/30 shadow-sm">
                   <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
                 </div>
-                <h3 className="text-4xl font-black font-headline leading-tight">🎉 All Topics Mastered</h3>
+                <h3 className="text-4xl font-black font-headline leading-tight">🎉 Already Mastered JSLearn!</h3>
                 <p className="text-lg text-on-surface-variant leading-relaxed max-w-md mx-auto">
                   You've completed all available learning content.
                 </p>
-                <p className="text-sm font-bold text-tertiary uppercase tracking-widest">More topics coming soon.</p>
+                <p className="text-sm font-bold text-tertiary uppercase tracking-widest">Coming soon for next topic.</p>
               </div>
             )}
           </div>
@@ -179,7 +192,7 @@ export default function Home() {
             <span className="h-px flex-1 bg-surface-container-high"></span>
           </h4>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {topics.slice(0, 4).map(course => (
+            {recentTopics.map(course => (
               <div
                 key={course.id}
                 onClick={() => navigate(`/topic/${course.slug}`)}

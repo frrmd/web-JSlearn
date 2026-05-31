@@ -38,7 +38,13 @@ class UserController extends Controller
             'username'   => 'sometimes|string|max:255|unique:users,username,' . $user->id,
             'avatar_url' => 'sometimes|string|max:500',
             'bio'        => 'sometimes|nullable|string|max:500',
-            'password'   => 'sometimes|string|min:6|confirmed',
+            'password'   => ['sometimes', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         if ($request->has('username')) {
@@ -91,9 +97,15 @@ class UserController extends Controller
             'name'       => 'required|string|max:255',
             'username'   => 'required|string|max:255|unique:users,username',
             'email'      => 'required|email|unique:users,email',
-            'password'   => 'required|string|min:6',
+            'password'   => ['required', 'string', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
             'role'       => 'required|in:student,admin',
             'avatar_url' => 'sometimes|string|max:500',
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         $user = User::create([
@@ -123,8 +135,14 @@ class UserController extends Controller
             'username'   => 'sometimes|string|max:255|unique:users,username,' . $user->id,
             'email'      => 'sometimes|email|unique:users,email,' . $user->id,
             'role'       => 'sometimes|in:student,admin',
-            'password'   => 'sometimes|string|min:6',
+            'password'   => ['sometimes', 'string', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
             'avatar_url' => 'sometimes|string|max:500',
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         if ($request->has('name')) {

@@ -9,18 +9,22 @@ class UserQuizProgress extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_quiz_progress';
+
     protected $fillable = [
         'user_id',
         'quiz_id',
         'best_score',
         'attempts',
+        'correct_question_ids',
     ];
 
     protected function casts(): array
     {
         return [
-            'best_score' => 'integer',
-            'attempts'   => 'integer',
+            'best_score'           => 'integer',
+            'attempts'             => 'integer',
+            'correct_question_ids' => 'array',
         ];
     }
 

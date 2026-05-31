@@ -22,7 +22,13 @@ class AuthController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+        ], [
+            'password.min' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.letters' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.mixed' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.numbers' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
+            'password.symbols' => 'Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.',
         ]);
 
         $user = User::create([

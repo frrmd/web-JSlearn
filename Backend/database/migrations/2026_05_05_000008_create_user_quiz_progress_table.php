@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
             $table->integer('best_score')->default(0);   // Best score achieved (0–100)
             $table->integer('attempts')->default(0);     // Total number of attempts
+            $table->json('correct_question_ids')->nullable(); // IDs of questions already answered correctly (XP already awarded)
             // Composite unique key: one record per user per quiz (updated on retries)
             $table->unique(['user_id', 'quiz_id']);
             $table->timestamps(); // updated_at = last attempt time

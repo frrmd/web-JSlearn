@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import PasswordStrengthIndicator from '../components/PasswordStrengthIndicator';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -120,10 +121,24 @@ export default function ForgotPassword() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters.');
+    if (!password.trim()) {
+      setErrorMessage('Password is required.');
       return;
     }
+
+    const isStrongPassword = (pass) => {
+      return pass.length >= 8 && 
+             /[A-Z]/.test(pass) && 
+             /[a-z]/.test(pass) && 
+             /[0-9]/.test(pass) && 
+             /[^A-Za-z0-9]/.test(pass);
+    };
+
+    if (!isStrongPassword(password)) {
+      setErrorMessage('Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match.');
       return;
@@ -281,6 +296,7 @@ export default function ForgotPassword() {
                   placeholder="••••••••"
                 />
               </div>
+              <PasswordStrengthIndicator password={password} />
             </div>
             <div>
               <label className="block text-sm font-bold mb-2 text-[#313c0f]">Confirm New Password</label>
