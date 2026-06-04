@@ -57,7 +57,7 @@ class OtpController extends Controller
             }
         }
 
-        // ── Rate limiting (max 5 OTPs per email in 10 min) ───────
+        //  Rate limiting (max 5 OTPs per email in 10 min) ───────
         $recentCount = OtpCode::where('email', $email)
             ->where('type', $type)
             ->where('created_at', '>=', now()->subMinutes(10))
